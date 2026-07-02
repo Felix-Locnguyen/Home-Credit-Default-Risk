@@ -1,4 +1,4 @@
-Dataset link: https://www.kaggle.com/competitions/ieee-fraud-detection/data
+Dataset link: https://www.kaggle.com/competitions/home-credit-default-risk/data?select=HomeCredit_columns_description.csv
 
 ## 📂 Project Structure
 

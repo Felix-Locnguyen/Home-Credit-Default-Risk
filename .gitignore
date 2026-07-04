@@ -22203,3 +22203,13 @@
 /venv/share/jupyter/kernels/python3/logo-svg.svg
 /venv/share/man/man1/ipython.1
 /Data/Raw_data/ieee-fraud-detection/sample_submission.csv
+/Data/Raw_data/home-credit-default-risk/previous_application.csv
+/Data/Raw_data/home-credit-default-risk/application_test.csv
+/Data/Raw_data/home-credit-default-risk/application_train.csv
+/Data/Raw_data/home-credit-default-risk/bureau_balance.csv
+/Data/Raw_data/home-credit-default-risk/bureau.csv
+/Data/Raw_data/home-credit-default-risk/credit_card_balance.csv
+/Data/Raw_data/home-credit-default-risk/HomeCredit_columns_description.csv
+/Data/Raw_data/home-credit-default-risk/installments_payments.csv
+/Data/Raw_data/home-credit-default-risk/POS_CASH_balance.csv
+/Data/Raw_data/home-credit-default-risk/sample_submission.csv

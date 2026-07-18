@@ -2,3 +2,7 @@ pandas
 seaborn
 scikit-learn
 matplotlib
+imblearn
+cupy-cuda12x
+numpy
+scikit-learn-intelex

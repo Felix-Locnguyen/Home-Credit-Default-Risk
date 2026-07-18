@@ -1,1261 +1,1817 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" class="h-full bg-slate-950 text-slate-100">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IEEE-CIS Threat Intelligence & Analytics Console</title>
-  
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  
-  <!-- Google Fonts: Inter & JetBrains Mono -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-  
-  <!-- Lucide Icons CDN -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Inter', 'sans-serif'],
-            mono: ['JetBrains Mono', 'monospace'],
-          },
-          colors: {
-            cyber: {
-              space: '#05070f',
-              panel: '#0b121f',
-              inner: '#070a12',
-              border: '#1e293b',
-              blue: '#00e5ff',
-              green: '#00e676',
-              red: '#ff3366',
-              amber: '#ffab00'
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Credit AI Portal - Quản lý, Dự báo & Phân tích Tín dụng</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Inter & Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Chart.js for Advanced Data Visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        hcRed: {
+                            50: '#fff1f2',
+                            100: '#ffe4e6',
+                            500: '#ee1d23', // Màu đỏ thương hiệu Home Credit
+                            600: '#dc141a',
+                            700: '#b91015',
+                        },
+                        brandDark: {
+                            900: '#0b0f19',
+                            800: '#111827',
+                            700: '#1f2937',
+                            600: '#374151',
+                        }
+                    },
+                    boxShadow: {
+                        'neon-red': '0 0 20px rgba(238, 29, 35, 0.15)',
+                        'neon-green': '0 0 20px rgba(16, 185, 129, 0.15)',
+                        'neon-blue': '0 0 20px rgba(59, 130, 246, 0.15)',
+                    }
+                }
             }
-          }
         }
-      }
-    }
-  </script>
-  <style>
-    /* Tùy biến thanh cuộn mượt mà chuẩn SOC */
-    ::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #05070f;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #1e293b;
-      border-radius: 4px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: #00e5ff;
-    }
-    .active-tab {
-      background-color: rgba(0, 229, 255, 0.05);
-      border-color: rgba(0, 229, 255, 0.2);
-      color: #00e5ff;
-      box-shadow: 0 0 15px rgba(0, 229, 255, 0.05);
-    }
-  </style>
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            scrollbar-width: thin;
+            scrollbar-color: #374151 #111827;
+        }
+        /* Custom Custom Scrollbar Chrome/Safari */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #111827;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #374151;
+            border-radius: 3px;
+        }
+        .glass-panel {
+            background: rgba(17, 24, 39, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+    </style>
 </head>
-<body class="bg-[#05070f] text-slate-100 font-sans h-screen flex overflow-hidden">
+<body class="h-full flex flex-col md:flex-row overflow-hidden">
 
-  <!-- SIDEBAR - THANH ĐIỀU HƯỚNG BÊN TRÁI -->
-  <aside class="w-72 bg-[#0b121f] border-r border-slate-800 flex flex-col justify-between shrink-0 z-20">
+
+<!-- Sidebar cho màn hình lớn, Bottom bar cho di động -->
+<aside class="md:w-64 bg-slate-900 border-r border-slate-800 flex flex-col justify-between z-30 shrink-0">
     <div>
-      <!-- Brand Logo & Radar Animation -->
-      <div class="p-6 border-b border-slate-800 flex items-center gap-3 bg-gradient-to-b from-cyan-950/20 to-transparent">
-        <div class="relative w-10 h-10 border border-cyan-500/30 rounded-full flex items-center justify-center bg-cyan-950/10">
-          <div class="absolute inset-0 rounded-full border border-cyan-400 border-t-transparent border-l-transparent animate-spin" style="animation-duration: 3s;"></div>
-          <i data-lucide="shield-alert" class="h-5 w-5 text-cyan-400"></i>
+        <!-- Logo Brand -->
+        <div class="p-6 flex items-center justify-between border-b border-slate-800">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-hcRed-500 flex items-center justify-center text-white font-extrabold text-xl shadow-lg shadow-hcRed-500/30">
+                    H
+                </div>
+                <div>
+                    <h1 class="font-bold text-md leading-tight text-white flex items-center gap-1.5">
+                        Home Credit <span class="text-xs bg-hcRed-500 text-white px-1.5 py-0.5 rounded">AI</span>
+                    </h1>
+                    <p class="text-xs text-slate-400">SmartPortal</p>
+                </div>
+            </div>
         </div>
-        <div>
-          <h1 class="font-bold text-xs uppercase tracking-wider text-slate-100 font-mono">IEEE-CIS SIEM</h1>
-          <p class="text-[9px] text-cyan-400 font-bold uppercase tracking-widest font-mono">Threat Intel Console</p>
-        </div>
-      </div>
 
-      <!-- Danh sách Menu chuyển Tab -->
-      <div class="p-4 space-y-1.5">
-        <p class="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Threat Hunting Tools</p>
-        
-        <button onclick="switchTab('dashboard')" id="btn-dashboard" class="active-tab w-full flex items-center gap-3 px-4 py-3 rounded-lg text-xs font-semibold text-slate-400 hover:bg-slate-800 hover:text-white border border-transparent transition-all duration-200 uppercase font-mono">
-          <i data-lucide="activity" class="h-4 w-4"></i>
-          <span>Security Console</span>
-        </button>
-
-        <button onclick="switchTab('single')" id="btn-single" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-xs font-semibold text-slate-400 hover:bg-slate-800 hover:text-white border border-transparent transition-all duration-200 uppercase font-mono">
-          <i data-lucide="search" class="h-4 w-4"></i>
-          <span>DA Diagnosis Hub</span>
-        </button>
-
-        <button onclick="switchTab('batch')" id="btn-batch" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-xs font-semibold text-slate-400 hover:bg-slate-800 hover:text-white border border-transparent transition-all duration-200 uppercase font-mono">
-          <i data-lucide="database" class="h-4 w-4"></i>
-          <span>Batch Sandbox</span>
-        </button>
-
-        <button onclick="switchTab('copilot')" id="btn-copilot" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-xs font-semibold text-slate-400 hover:bg-slate-800 hover:text-white border border-transparent transition-all duration-200 uppercase font-mono">
-          <i data-lucide="terminal" class="h-4 w-4"></i>
-          <span>AI Threat Intel</span>
-          <span class="ml-auto bg-rose-500/20 text-rose-400 text-[8px] font-bold px-2 py-0.5 rounded-full border border-rose-500/30 uppercase tracking-wider">Critical</span>
-        </button>
-      </div>
+        <!-- Navigation Menu -->
+        <nav class="p-4 space-y-1">
+            <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all text-hcRed-500 bg-hcRed-500/10">
+                <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+                Bảng điều khiển
+            </button>
+            <button onclick="switchTab('predictor')" id="nav-predictor" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all text-slate-400 hover:text-white hover:bg-slate-800/50">
+                <i data-lucide="shield-alert" class="w-5 h-5"></i>
+                Đánh giá rủi ro AI
+            </button>
+            <button onclick="switchTab('analytics')" id="nav-analytics" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all text-slate-400 hover:text-white hover:bg-slate-800/50">
+                <i data-lucide="bar-chart-3" class="w-5 h-5"></i>
+                Phân tích dữ liệu AI
+            </button>
+            <button onclick="switchTab('calculator')" id="nav-calculator" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all text-slate-400 hover:text-white hover:bg-slate-800/50">
+                <i data-lucide="calculator" class="w-5 h-5"></i>
+                Tính toán Trả góp
+            </button>
+            <button onclick="switchTab('creditcard')" id="nav-creditcard" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all text-slate-400 hover:text-white hover:bg-slate-800/50">
+                <i data-lucide="credit-card" class="w-5 h-5"></i>
+                Mở thẻ tín dụng ảo
+            </button>
+            <button onclick="switchTab('assistant')" id="nav-assistant" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all text-slate-400 hover:text-white hover:bg-slate-800/50">
+                <i data-lucide="bot" class="w-5 h-5"></i>
+                Trợ lý Tài chính
+            </button>
+        </nav>
     </div>
 
-    <!-- Thông số đánh giá mô hình ML chuyên sâu -->
-    <div class="p-4 border-t border-slate-800 bg-[#05070f]/50">
-      <div class="bg-[#070a12] p-4 rounded-xl border border-slate-800 text-center space-y-1.5">
-        <p class="text-[9px] text-slate-400 uppercase font-bold tracking-widest font-mono">Inference Model Score</p>
-        <p class="text-xl font-black text-emerald-400 font-mono flex items-center justify-center gap-1.5">
-          0.9421 <span class="text-[9px] text-emerald-500 font-bold">▲ +0.02%</span>
-        </p>
-        <div class="flex justify-between text-[9px] text-slate-500 pt-2 border-t border-slate-800 font-mono">
-          <span>XGBoost + CatBoost</span>
-          <span>Loss FPR: 0.02%</span>
+    <!-- Cài đặt API Key & User Profile -->
+    <div class="p-4 border-t border-slate-800 space-y-3">
+        <!-- API KEY Setup Panel -->
+        <div class="p-3 bg-slate-950/80 rounded-xl border border-slate-800">
+            <label class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-2 flex items-center justify-between">
+                Cấu hình API Key
+                <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" id="api-status"></span>
+            </label>
+            <div class="relative flex items-center">
+                <input type="password" id="gemini-api-key" placeholder="Nhập Gemini API Key..." class="w-full pl-3 pr-8 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-xs text-slate-300 focus:outline-none focus:border-hcRed-500">
+                <button onclick="saveApiKey()" class="absolute right-2 text-slate-400 hover:text-white" title="Lưu khóa">
+                    <i data-lucide="save" class="w-4 h-4"></i>
+                </button>
+            </div>
+            <p class="text-[10px] text-slate-500 mt-1">Hệ thống sẽ tự động dùng khóa mặc định từ Canvas nếu để trống.</p>
         </div>
-      </div>
-    </div>
-  </aside>
 
-  <!-- PHẦN NỘI DUNG CHÍNH (MAIN CONTAINER) -->
-  <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+        <div class="flex items-center gap-3 p-2 bg-slate-950/40 rounded-xl">
+            <div class="w-10 h-10 rounded-full bg-slate-700 overflow-hidden flex items-center justify-center">
+                <img src="https://placehold.co/100x100/1e293b/ffffff?text=U" alt="Avatar" class="w-full h-full object-cover">
+            </div>
+            <div class="min-w-0 flex-1">
+                <h4 class="text-sm font-semibold text-white truncate">Nguyễn Minh Quân</h4>
+                <p class="text-xs text-slate-400 truncate">Hội viên hạng Vàng</p>
+            </div>
+        </div>
+    </div>
+</aside>
+
+
+<!-- Container chính chứa nội dung -->
+<main class="flex-1 flex flex-col overflow-y-auto bg-slate-950 relative">
     
-    <!-- HEADER - THANH ĐẦU TRANG -->
-    <header class="h-16 bg-[#0b121f] border-b border-slate-800 px-8 flex justify-between items-center shrink-0">
-      <div class="flex items-center gap-4">
-        <span class="text-[9px] font-mono bg-cyan-950/40 border border-cyan-500/30 text-cyan-400 px-2 py-1 rounded font-bold">ENVELOPE SYSTEM ACTIVE</span>
-        <h2 id="header-title" class="text-xs font-bold text-slate-100 uppercase tracking-wider font-mono">Hệ thống phân tích rủi ro an ninh tài chính</h2>
-      </div>
-
-      <div class="flex items-center gap-4">
-        <!-- Đèn trạng thái giả lập Live -->
-        <button id="btn-live" onclick="toggleLiveStream()" class="flex items-center gap-2 px-4 py-1.5 rounded-md text-[10px] font-bold font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 transition uppercase tracking-wider">
-          <span id="live-indicator" class="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span id="live-text">Real-time Intel active</span>
-        </button>
-      </div>
+    <!-- Top Bar -->
+    <header class="h-16 border-b border-slate-800 flex items-center justify-between px-6 bg-slate-900/60 backdrop-blur shrink-0">
+        <div class="flex items-center gap-4">
+            <h2 id="page-title" class="text-lg font-bold text-white flex items-center gap-2">
+                <i data-lucide="layout-dashboard" class="w-5 h-5 text-hcRed-500"></i>
+                Bảng điều khiển
+            </h2>
+        </div>
+        <div class="flex items-center gap-3">
+            <div id="credit-limit-badge" class="bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-full text-emerald-400 text-xs font-semibold flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                Hạn mức khả dụng: 45.000.000đ
+            </div>
+            <button onclick="showToast('Hệ thống cập nhật dữ liệu tài sản số', 'info')" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300">
+                <i data-lucide="bell" class="w-4 h-4"></i>
+            </button>
+        </div>
     </header>
 
-    <!-- CONTAINER HIỂN THỊ NỘI DUNG CHI TIẾT -->
-    <div class="flex-1 overflow-y-auto p-8 space-y-6">
+    <!-- Khu vực hiển thị thông báo Toast -->
+    <div id="toast-container" class="fixed top-4 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
-      <!-- ================= TAB 1: SECURITY CONSOLE (DASHBOARD) ================= -->
-      <div id="tab-dashboard" class="space-y-6">
-        
-        <!-- Thống kê 4 chỉ số an ninh tài chính -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-          
-          <div class="bg-[#0b121f] p-5 rounded-xl border border-slate-800 relative overflow-hidden before:absolute before:top-0 before:left-0 before:w-1 before:h-full before:bg-cyan-400">
-            <div class="flex justify-between items-start">
-              <div>
-                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest font-mono">Tổng cảnh báo hệ thống</p>
-                <h3 id="stat-total" class="text-2xl font-black text-slate-100 mt-2 font-mono">1,482,904</h3>
-                <p class="text-[10px] text-emerald-400 font-mono mt-2">▲ +12% so với chu kỳ trước</p>
-              </div>
-              <div class="p-2.5 bg-slate-900 border border-slate-800 rounded-lg text-cyan-400">
-                <i data-lucide="clock" class="h-5 w-5"></i>
-              </div>
+    <!-- TABS CONTAINER -->
+    <div class="p-6 flex-1">
+
+        <!-- 1. TAB: DASHBOARD -->
+        <div id="tab-dashboard" class="tab-content space-y-6">
+            <!-- Thẻ Tổng quan chỉ số tài chính -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Thẻ Dư nợ -->
+                <div class="glass-panel p-6 rounded-2xl relative overflow-hidden group hover:border-hcRed-500/30 transition-all">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-hcRed-500/10 rounded-full blur-2xl -mr-10 -mt-10"></div>
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-sm text-slate-400">Tổng dư nợ hiện tại</span>
+                        <span class="p-2 rounded-xl bg-hcRed-500/10 text-hcRed-500">
+                            <i data-lucide="trending-up" class="w-5 h-5"></i>
+                        </span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-1">12.450.000 đ</h3>
+                    <p class="text-xs text-slate-400 flex items-center gap-1">
+                        <i data-lucide="calendar" class="w-3.5 h-3.5"></i> Kỳ thanh toán kế tiếp: <span class="text-hcRed-400 font-semibold">05/08/2026</span>
+                    </p>
+                </div>
+
+                <!-- Thẻ Chấm Điểm Tín Dụng Nội Bộ -->
+                <div class="glass-panel p-6 rounded-2xl relative overflow-hidden group hover:border-emerald-500/30 transition-all">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl -mr-10 -mt-10"></div>
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-sm text-slate-400">Điểm Tín dụng Ước tính</span>
+                        <span class="p-2 rounded-xl bg-emerald-500/10 text-emerald-400">
+                            <i data-lucide="award" class="w-5 h-5"></i>
+                        </span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-emerald-400 mb-1" id="dash-credit-score">720 / 850</h3>
+                    <p class="text-xs text-slate-400 flex items-center gap-1">
+                        <span class="text-emerald-400 font-bold">● Tốt</span> - Đủ điều kiện nhận lãi suất ưu đãi (-2%)
+                    </p>
+                </div>
+
+                <!-- Thẻ Khả năng vỡ nợ dự báo -->
+                <div class="glass-panel p-6 rounded-2xl relative overflow-hidden group hover:border-yellow-500/30 transition-all">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-yellow-500/10 rounded-full blur-2xl -mr-10 -mt-10"></div>
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-sm text-slate-400">Chỉ số rủi ro trễ hạn (AI)</span>
+                        <span class="p-2 rounded-xl bg-yellow-500/10 text-yellow-500">
+                            <i data-lucide="percent" class="w-5 h-5"></i>
+                        </span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-yellow-500 mb-1" id="dash-default-risk">12.4%</h3>
+                    <p class="text-xs text-slate-400 flex items-center gap-1">
+                        <span class="text-emerald-400 font-bold">Mức rủi ro: Thấp</span>. Không phát hiện rủi ro thanh toán.
+                    </p>
+                </div>
             </div>
-          </div>
 
-          <div class="bg-[#0b121f] p-5 rounded-xl border border-slate-800 relative overflow-hidden before:absolute before:top-0 before:left-0 before:w-1 before:h-full before:bg-rose-500">
-            <div class="flex justify-between items-start">
-              <div>
-                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest font-mono">Tỷ lệ bất thường đang quét</p>
-                <h3 class="text-2xl font-black text-rose-500 mt-2 font-mono">3.48%</h3>
-                <p class="text-[10px] text-rose-400 font-mono mt-2">Mức độ rủi ro: CAO (CRITICAL)</p>
-              </div>
-              <div class="p-2.5 bg-slate-900 border border-slate-800 rounded-lg text-rose-400">
-                <i data-lucide="shield-alert" class="h-5 w-5"></i>
-              </div>
+            <!-- Dashboard Content Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Danh sách khoản vay & thẻ hiện tại -->
+                <div class="lg:col-span-2 space-y-6">
+                    <div class="glass-panel p-6 rounded-2xl">
+                        <h3 class="text-base font-bold text-white mb-4 flex items-center justify-between">
+                            Danh sách hợp đồng & khoản vay hoạt động
+                            <span class="text-xs bg-slate-800 text-slate-400 px-2 py-1 rounded">2 Hợp đồng</span>
+                        </h3>
+                        <div class="space-y-4">
+                            <!-- Hợp đồng 1 -->
+                            <div class="p-4 bg-slate-900/60 rounded-xl border border-slate-800 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-12 h-12 rounded-xl bg-hcRed-500/10 text-hcRed-500 flex items-center justify-center font-bold">
+                                        <i data-lucide="smartphone" class="w-6 h-6"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-sm font-semibold text-white">Mua trả góp Điện thoại iPhone 17 Pro</h4>
+                                        <p class="text-xs text-slate-400">Mã HĐ: <span class="font-mono text-slate-300">HC-889102</span></p>
+                                    </div>
+                                </div>
+                                <div class="text-left md:text-right">
+                                    <p class="text-sm font-bold text-white">1.250.000 đ <span class="text-xs text-slate-400 font-normal">/ tháng</span></p>
+                                    <p class="text-xs text-slate-500">Đã trả: 6/12 tháng (Còn lại 7.500.000 đ)</p>
+                                </div>
+                                <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                                    Đang trả đều
+                                </span>
+                            </div>
+
+                            <!-- Hợp đồng 2 -->
+                            <div class="p-4 bg-slate-900/60 rounded-xl border border-slate-800 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center font-bold">
+                                        <i data-lucide="wallet" class="w-6 h-6"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-sm font-semibold text-white">Khoản vay Tiền mặt Tiêu dùng</h4>
+                                        <p class="text-xs text-slate-400">Mã HĐ: <span class="font-mono text-slate-300">HC-320984</span></p>
+                                    </div>
+                                </div>
+                                <div class="text-left md:text-right">
+                                    <p class="text-sm font-bold text-white">820.000 đ <span class="text-xs text-slate-400 font-normal">/ tháng</span></p>
+                                    <p class="text-xs text-slate-500">Đã trả: 2/6 tháng (Còn lại 3.280.000 đ)</p>
+                                </div>
+                                <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                                    Đang trả đều
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mẹo cải thiện dòng tiền & chống nợ xấu -->
+                    <div class="glass-panel p-6 rounded-2xl relative overflow-hidden">
+                        <div class="absolute -right-10 -bottom-10 w-44 h-44 bg-hcRed-500/5 rounded-full blur-3xl"></div>
+                        <h3 class="text-base font-bold text-white mb-3 flex items-center gap-2">
+                            <i data-lucide="sparkles" class="text-yellow-400 w-5 h-5"></i>
+                            Gợi ý từ Chuyên gia Tài chính AI
+                        </h3>
+                        <p class="text-sm text-slate-300 mb-4 leading-relaxed">
+                            Dựa trên lịch sử thanh toán rất chuẩn chỉnh của bạn trong 6 tháng qua, điểm uy tín của bạn đã tăng 15 điểm. Bạn đang có cơ hội được tăng thêm hạn mức tín dụng hoặc được giải ngân vay tiêu dùng tiền mặt ưu đãi chỉ từ 0.99%/tháng.
+                        </p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div class="p-3 bg-slate-900/40 rounded-xl border border-slate-800 flex gap-2">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-emerald-500 shrink-0"></i>
+                                <span class="text-xs text-slate-300">Đăng ký trích nợ tự động ví điện tử MoMo/ZaloPay tránh quá hạn vô ý.</span>
+                            </div>
+                            <div class="p-3 bg-slate-900/40 rounded-xl border border-slate-800 flex gap-2">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-emerald-500 shrink-0"></i>
+                                <span class="text-xs text-slate-300">Dồn các lịch thanh toán trùng ngày để quản lý ngân quỹ dòng tiền tốt hơn.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cột phụ: Thẻ ảo, Ưu đãi nhanh -->
+                <div class="space-y-6">
+                    <!-- Thẻ Virtual Credit Card thu nhỏ -->
+                    <div class="glass-panel p-6 rounded-2xl flex flex-col justify-between h-[220px] bg-gradient-to-br from-hcRed-600 to-rose-950 border border-hcRed-500/20 shadow-neon-red relative overflow-hidden">
+                        <div class="absolute -right-8 -bottom-8 w-32 h-32 bg-yellow-500/10 rounded-full blur-2xl"></div>
+                        <div class="flex items-start justify-between">
+                            <div>
+                                <p class="text-xs text-white/70 uppercase font-semibold">Home Credit Premium Card</p>
+                                <p class="text-lg font-bold text-white mt-1">Visa Virtual</p>
+                            </div>
+                            <i data-lucide="radio" class="w-6 h-6 text-white/80"></i>
+                        </div>
+                        <div>
+                            <p class="text-md font-mono text-white/90 tracking-widest">**** **** **** 1290</p>
+                            <div class="flex items-center justify-between mt-4">
+                                <div>
+                                    <p class="text-[10px] text-white/60">CHỦ THẺ</p>
+                                    <p class="text-xs font-semibold text-white">NGUYEN MINH QUAN</p>
+                                </div>
+                                <div>
+                                    <p class="text-[10px] text-white/60">HẠN SỬ DỤNG</p>
+                                    <p class="text-xs font-semibold text-white">09/31</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quảng cáo ưu đãi giải ngân -->
+                    <div class="glass-panel p-6 rounded-2xl bg-slate-900 border border-slate-800 text-center">
+                        <div class="w-12 h-12 bg-hcRed-500/10 text-hcRed-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <i data-lucide="gift" class="w-6 h-6"></i>
+                        </div>
+                        <h4 class="text-sm font-bold text-white mb-1">Món Quà Thành Viên Vàng</h4>
+                        <p class="text-xs text-slate-400 mb-4">Bạn được tặng Voucher giảm giá 500k cho kỳ đóng tiền kế tiếp!</p>
+                        <button onclick="showToast('Nhận voucher thành công! Voucher sẽ tự áp dụng tại kỳ thanh toán sau.', 'success')" class="w-full py-2 bg-hcRed-500 hover:bg-hcRed-600 text-white rounded-xl text-xs font-semibold transition-all">
+                            Nhận Ngay
+                        </button>
+                    </div>
+                </div>
             </div>
-          </div>
-
-          <div class="bg-[#0b121f] p-5 rounded-xl border border-slate-800 relative overflow-hidden before:absolute before:top-0 before:left-0 before:w-1 before:h-full before:bg-amber-500">
-            <div class="flex justify-between items-start">
-              <div>
-                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest font-mono">Độ trễ phản hồi (Inference)</p>
-                <h3 class="text-2xl font-black text-amber-500 mt-2 font-mono">14 ms</h3>
-                <p class="text-[10px] text-slate-400 font-mono mt-2">Thời gian phản hồi phân vị 99</p>
-              </div>
-              <div class="p-2.5 bg-slate-900 border border-slate-800 rounded-lg text-amber-400">
-                <i data-lucide="lock" class="h-5 w-5"></i>
-              </div>
-            </div>
-          </div>
-
-          <div class="bg-[#0b121f] p-5 rounded-xl border border-slate-800 relative overflow-hidden before:absolute before:top-0 before:left-0 before:w-1 before:h-full before:bg-emerald-500">
-            <div class="flex justify-between items-start">
-              <div>
-                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest font-mono">Thiệt hại đã tránh được</p>
-                <h3 class="text-2xl font-black text-emerald-400 mt-2 font-mono">$4.85M</h3>
-                <p class="text-[10px] text-emerald-400 font-mono mt-2">✓ Tỷ lệ chặn tự động ổn định</p>
-              </div>
-              <div class="p-2.5 bg-slate-900 border border-slate-800 rounded-lg text-emerald-400">
-                <i data-lucide="dollar-sign" class="h-5 w-5"></i>
-              </div>
-            </div>
-          </div>
-
         </div>
 
-        <!-- KHU VỰC TRỰC QUAN HÓA BIỂU ĐỒ CHUYÊN SÂU (GRAPHS HUB) -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          
-          <!-- Sóng biến thiên rủi ro real-time -->
-          <div class="bg-[#0b121f] p-6 rounded-xl border border-slate-800 space-y-4">
-            <div>
-              <h4 class="font-bold text-xs uppercase tracking-wider text-slate-100 font-mono flex items-center gap-2">
-                <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_#00e5ff]"></span>
-                Hành trình biến động rủi ro (Risk Waveform)
-              </h4>
-              <p class="text-[11px] text-slate-400 mt-1">Điểm số rủi ro trung bình được cập nhật liên tục qua sóng SVG</p>
-            </div>
-            <div class="h-52 w-full bg-[#070a12] border border-slate-800/80 rounded-lg overflow-hidden relative p-2">
-              <svg id="live-svg-chart" class="w-full h-full" viewBox="0 0 600 220" preserveAspectRatio="none">
-                <defs>
-                  <linearGradient id="cyber-gradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stop-color="#00e5ff" stop-opacity="0.25"></stop>
-                    <stop offset="100%" stop-color="#00e5ff" stop-opacity="0.0"></stop>
-                  </linearGradient>
-                </defs>
-                <path id="svg-fill-area" d="" fill="url(#cyber-gradient)"></path>
-                <path id="svg-line-stroke" d="" fill="none" stroke="#00e5ff" stroke-width="2.5"></path>
-              </svg>
-            </div>
-          </div>
-
-          <!-- Phân phối rủi ro theo loại thẻ -->
-          <div class="bg-[#0b121f] p-6 rounded-xl border border-slate-800 space-y-4">
-            <div>
-              <h4 class="font-bold text-xs uppercase tracking-wider text-slate-100 font-mono flex items-center gap-2">
-                <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_#00e5ff]"></span>
-                Tỷ lệ gian lận theo nhóm thẻ (card4 & card6)
-              </h4>
-              <p class="text-[11px] text-slate-400 mt-1">Phân bổ rủi ro thực tế trên tập mẫu IEEE-CIS</p>
-            </div>
-            <div class="h-52 w-full bg-[#070a12] border border-slate-800/80 rounded-lg overflow-hidden relative p-4">
-              <svg id="card-distribution-chart" class="w-full h-full" viewBox="0 0 600 220" preserveAspectRatio="none">
-                <!-- Grid Lines -->
-                <line x1="50" y1="30" x2="550" y2="30" stroke="#1e293b" stroke-width="1" stroke-dasharray="4,4"></line>
-                <line x1="50" y1="80" x2="550" y2="80" stroke="#1e293b" stroke-width="1" stroke-dasharray="4,4"></line>
-                <line x1="50" y1="130" x2="550" y2="130" stroke="#1e293b" stroke-width="1" stroke-dasharray="4,4"></line>
-                <line x1="50" y1="180" x2="550" y2="180" stroke="#1e293b" stroke-width="1"></line>
-
-                <!-- Y Axis labels -->
-                <text x="35" y="34" fill="#94a3b8" font-family="monospace" font-size="9" text-anchor="end">10.0%</text>
-                <text x="35" y="84" fill="#94a3b8" font-family="monospace" font-size="9" text-anchor="end">5.0%</text>
-                <text x="35" y="134" fill="#94a3b8" font-family="monospace" font-size="9" text-anchor="end">2.5%</text>
-                <text x="35" y="184" fill="#94a3b8" font-family="monospace" font-size="9" text-anchor="end">0%</text>
-
-                <!-- Bars (Visa Credit, MasterCard Credit, Visa Debit, Discover Credit) -->
-                <rect x="90" y="87" width="50" height="93" fill="url(#blue-gradient)" rx="4"></rect>
-                <text x="115" y="77" fill="#00e5ff" font-family="monospace" font-size="10" text-anchor="middle" font-weight="bold">6.2%</text>
-                <text x="115" y="200" fill="#94a3b8" font-size="10" text-anchor="middle">Visa Credit</text>
-
-                <rect x="210" y="99" width="50" height="81" fill="url(#blue-gradient)" rx="4"></rect>
-                <text x="235" y="89" fill="#00e5ff" font-family="monospace" font-size="10" text-anchor="middle" font-weight="bold">5.4%</text>
-                <text x="235" y="200" fill="#94a3b8" font-size="10" text-anchor="middle">MC Credit</text>
-
-                <rect x="330" y="153" width="50" height="27" fill="url(#green-gradient)" rx="4"></rect>
-                <text x="355" y="143" fill="#00e676" font-family="monospace" font-size="10" text-anchor="middle" font-weight="bold">1.8%</text>
-                <text x="355" y="200" fill="#94a3b8" font-size="10" text-anchor="middle">Visa Debit</text>
-
-                <rect x="450" y="46.5" width="50" height="133.5" fill="url(#red-gradient)" rx="4"></rect>
-                <text x="475" y="36" fill="#ff3366" font-family="monospace" font-size="10" text-anchor="middle" font-weight="bold">8.9%</text>
-                <text x="475" y="200" fill="#94a3b8" font-size="10" text-anchor="middle">Discover Cr.</text>
-
-                <defs>
-                  <linearGradient id="blue-gradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stop-color="#00e5ff"></stop>
-                    <stop offset="100%" stop-color="rgba(0, 229, 255, 0.1)"></stop>
-                  </linearGradient>
-                  <linearGradient id="green-gradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stop-color="#00e676"></stop>
-                    <stop offset="100%" stop-color="rgba(0, 230, 118, 0.1)"></stop>
-                  </linearGradient>
-                  <linearGradient id="red-gradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stop-color="#ff3366"></stop>
-                    <stop offset="100%" stop-color="rgba(255, 51, 102, 0.1)"></stop>
-                  </linearGradient>
-                </defs>
-              </svg>
-            </div>
-          </div>
-
-          <!-- Đường cong ROC-AUC -->
-          <div class="bg-[#0b121f] p-6 rounded-xl border border-slate-800 space-y-4">
-            <div>
-              <h4 class="font-bold text-xs uppercase tracking-wider text-slate-100 font-mono flex items-center gap-2">
-                <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_#00e5ff]"></span>
-                Đường cong ROC-AUC đánh giá mô hình
-              </h4>
-              <p class="text-[11px] text-slate-400 mt-1">Chỉ báo đo lường khả năng phân loại rủi ro (TPR vs FPR)</p>
-            </div>
-            <div class="h-52 w-full bg-[#070a12] border border-slate-800/80 rounded-lg overflow-hidden relative flex items-center justify-center p-2">
-              <svg id="roc-auc-chart" class="w-full h-full max-w-[450px]" viewBox="0 0 600 220">
-                <line x1="50" y1="20" x2="50" y2="180" stroke="#1e293b" stroke-width="1.5"></line>
-                <line x1="50" y1="180" x2="480" y2="180" stroke="#1e293b" stroke-width="1.5"></line>
+        <!-- 2. TAB: AI RISK PREDICTOR -->
+        <div id="tab-predictor" class="tab-content hidden space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
                 
-                <line x1="50" y1="180" x2="480" y2="20" stroke="#334155" stroke-width="1.5" stroke-dasharray="6,6"></line>
-                <path d="M 50,180 Q 75,30 480,20" fill="none" stroke="#00e676" stroke-width="3" filter="drop-shadow(0px 0px 4px rgba(0, 230, 118, 0.3))"></path>
+                <!-- Bảng nhập thông số đánh giá (Bên trái) -->
+                <div class="lg:col-span-7 glass-panel p-6 rounded-2xl space-y-4">
+                    <div class="border-b border-slate-800 pb-3 flex items-center justify-between">
+                        <div>
+                            <h3 class="text-base font-bold text-white">Mô phỏng Thẩm định Tín dụng nâng cao</h3>
+                            <p class="text-xs text-slate-400">Hãy nhập đầy đủ thông số để AI dự đoán nguy cơ xảy ra quá hạn thanh toán.</p>
+                        </div>
+                        <span class="px-2 py-1 rounded bg-hcRed-500/10 text-hcRed-500 text-xs font-semibold flex items-center gap-1">
+                            <i data-lucide="shield" class="w-3.5 h-3.5"></i> Chế độ Thử nghiệm
+                        </span>
+                    </div>
 
-                <text x="45" y="25" fill="#94a3b8" font-family="monospace" font-size="8" text-anchor="end">1.0 (TPR)</text>
-                <text x="45" y="184" fill="#94a3b8" font-family="monospace" font-size="8" text-anchor="end">0.0</text>
-                <text x="480" y="195" fill="#94a3b8" font-family="monospace" font-size="8" text-anchor="middle">1.0 (FPR)</text>
-                
-                <rect x="260" y="100" width="180" height="50" fill="#070a12" stroke="#1e293b" rx="6"></rect>
-                <text x="275" y="120" fill="#f8fafc" font-size="11" font-weight="700">Mô hình tích hợp ML</text>
-                <text x="275" y="138" fill="#00e676" font-family="monospace" font-size="10" font-weight="bold">AUC: 0.9421 (Xuất sắc)</text>
-              </svg>
-            </div>
-          </div>
+                    <form id="predictor-form" class="space-y-4" onsubmit="runAiPrediction(event)">
+                        <!-- Thông tin thu nhập & Chi tiêu hàng tháng -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-medium text-slate-300 mb-1.5">Thu nhập hàng tháng (VNĐ) <span class="text-hcRed-500">*</span></label>
+                                <input type="number" id="pred-income" value="15000000" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-hcRed-500" required>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-300 mb-1.5">Chi tiêu thiết yếu hàng tháng (VNĐ) <span class="text-hcRed-500">*</span></label>
+                                <input type="number" id="pred-expenses" value="8000000" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-hcRed-500" required>
+                            </div>
+                        </div>
 
-          <!-- Feature Importance -->
-          <div class="bg-[#0b121f] p-6 rounded-xl border border-slate-800 space-y-4">
-            <div>
-              <h4 class="font-bold text-xs uppercase tracking-wider text-slate-100 font-mono flex items-center gap-2">
-                <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_#00e5ff]"></span>
-                Feature Importance (Top Thuộc Tính)
-              </h4>
-              <p class="text-[11px] text-slate-400 mt-1">Tỷ lệ đóng góp chính trong thuật toán LightGBM</p>
-            </div>
-            <div class="h-52 w-full bg-[#070a12] border border-slate-800/80 rounded-lg overflow-hidden relative p-4">
-              <svg id="feature-importance-chart" class="w-full h-full" viewBox="0 0 600 220">
-                <line x1="120" y1="15" x2="120" y2="195" stroke="#1e293b" stroke-width="1.5"></line>
-                
-                <text x="110" y="34" fill="#94a3b8" font-family="monospace" font-size="10" text-anchor="end">TransactionAmt</text>
-                <rect x="120" y="23" width="340" height="15" fill="#00e5ff" rx="2"></rect>
-                <text x="470" y="34" fill="#00e5ff" font-family="monospace" font-size="10" font-weight="bold">100</text>
+                        <!-- Số lần trễ hạn và các khoản vay khác -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-medium text-slate-300 mb-1.5">Số lần trả trễ hạn quá khứ (CIC / Lịch sử) <span class="text-hcRed-500">*</span></label>
+                                <select id="pred-late-payments" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-hcRed-500">
+                                    <option value="0">Chưa từng trễ hạn (0 lần)</option>
+                                    <option value="1">1 - 2 lần (Chậm ngắn ngày)</option>
+                                    <option value="3">3 - 5 lần (Nợ chú ý Nhóm 2)</option>
+                                    <option value="6">Trên 5 lần (Nguy cơ cao)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-300 mb-1.5">Tổng số tiền đang nợ tổ chức khác (VNĐ)</label>
+                                <input type="number" id="pred-other-debts" value="0" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-hcRed-500">
+                            </div>
+                        </div>
 
-                <text x="110" y="74" fill="#94a3b8" font-family="monospace" font-size="10" text-anchor="end">card1</text>
-                <rect x="120" y="63" width="280" height="15" fill="#00e5ff" rx="2" opacity="0.95"></rect>
-                <text x="410" y="74" fill="#00e5ff" font-family="monospace" font-size="10" font-weight="bold">82</text>
+                        <!-- Khoản vay mong muốn & Kỳ hạn -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-medium text-slate-300 mb-1.5">Số tiền muốn vay thêm (VNĐ) <span class="text-hcRed-500">*</span></label>
+                                <input type="number" id="pred-loan-amount" value="30000000" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-hcRed-500" required>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-300 mb-1.5">Kỳ hạn vay mong muốn (Tháng) <span class="text-hcRed-500">*</span></label>
+                                <select id="pred-loan-term" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-hcRed-500">
+                                    <option value="6">6 tháng</option>
+                                    <option value="12" selected>12 tháng</option>
+                                    <option value="18">18 tháng</option>
+                                    <option value="24">24 tháng</option>
+                                    <option value="36">36 tháng</option>
+                                </select>
+                            </div>
+                        </div>
 
-                <text x="110" y="114" fill="#94a3b8" font-family="monospace" font-size="10" text-anchor="end">C13</text>
-                <rect x="120" y="103" width="230" height="15" fill="#00e5ff" rx="2" opacity="0.85"></rect>
-                <text x="360" y="114" fill="#00e5ff" font-family="monospace" font-size="10" font-weight="bold">68</text>
+                        <!-- Thông tin cá nhân bổ sung hỗ trợ dự đoán -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-xs font-medium text-slate-300 mb-1.5">Nghề nghiệp hiện tại <span class="text-hcRed-500">*</span></label>
+                                <select id="pred-job" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-hcRed-500">
+                                    <option value="salaried" selected>Nhân viên văn phòng (Nhận lương)</option>
+                                    <option value="self-employed">Tự doanh / Chủ hộ kinh doanh</option>
+                                    <option value="freelancer">Lao động tự do (Freelancer)</option>
+                                    <option value="unemployed">Chưa có việc làm ổn định</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-300 mb-1.5">Số người phụ thuộc (Người)</label>
+                                <input type="number" id="pred-dependents" value="0" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-hcRed-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-300 mb-1.5">Sở hữu tài sản (Bất động sản / Xe cộ)</label>
+                                <select id="pred-assets" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-hcRed-500">
+                                    <option value="both">Sở hữu cả Nhà & Xe ô tô</option>
+                                    <option value="house">Sở hữu Nhà</option>
+                                    <option value="car">Sở hữu Xe máy / Xe ô tô</option>
+                                    <option value="none" selected>Không có tài sản thế chấp lớn</option>
+                                </select>
+                            </div>
+                        </div>
 
-                <text x="110" y="154" fill="#94a3b8" font-family="monospace" font-size="10" text-anchor="end">P_email</text>
-                <rect x="120" y="143" width="180" height="15" fill="#00e5ff" rx="2" opacity="0.75"></rect>
-                <text x="310" y="154" fill="#00e5ff" font-family="monospace" font-size="10" font-weight="bold">53</text>
-
-                <text x="110" y="194" fill="#94a3b8" font-family="monospace" font-size="10" text-anchor="end">addr1</text>
-                <rect x="120" y="183" width="120" height="15" fill="#00e5ff" rx="2" opacity="0.65"></rect>
-                <text x="250" y="194" fill="#00e5ff" font-family="monospace" font-size="10" font-weight="bold">35</text>
-              </svg>
-            </div>
-          </div>
-
-        </div>
-
-        <!-- Layout Ma trận & Log -->
-        <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
-          <!-- Ma trận nhầm lẫn -->
-          <div class="bg-[#0b121f] p-6 rounded-xl border border-slate-800 space-y-4">
-            <div>
-              <h4 class="font-bold text-xs uppercase tracking-wider text-slate-100 font-mono flex items-center gap-2">
-                <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
-                Model Diagnostics Center
-              </h4>
-              <p class="text-[11px] text-slate-400 mt-1">Đánh giá ma trận nhầm lẫn dựa trên tập kiểm định out-of-bag</p>
-            </div>
-            
-            <div class="grid grid-cols-3 gap-2 text-center font-mono text-[11px] mt-4">
-              <div></div>
-              <div class="font-bold text-slate-400 p-2">Dự đoán Safe</div>
-              <div class="font-bold text-slate-400 p-2">Dự đoán Fraud</div>
-              
-              <div class="font-bold text-slate-400 self-center">Thực tế Safe</div>
-              <div class="bg-[#070a12]/80 border border-emerald-500/20 text-emerald-400 p-3 rounded-lg flex flex-col justify-center">
-                <span class="text-sm font-bold">97.82%</span>
-                <span class="text-[8px] uppercase text-slate-500 mt-1">True Neg</span>
-              </div>
-              <div class="bg-[#070a12]/80 border border-slate-800 text-rose-400 p-3 rounded-lg flex flex-col justify-center">
-                <span class="text-sm font-bold">2.18%</span>
-                <span class="text-[8px] uppercase text-slate-500 mt-1">False Pos</span>
-              </div>
-
-              <div class="font-bold text-slate-400 self-center">Thực tế Fraud</div>
-              <div class="bg-[#070a12]/80 border border-slate-800 text-rose-400 p-3 rounded-lg flex flex-col justify-center">
-                <span class="text-sm font-bold">10.51%</span>
-                <span class="text-[8px] uppercase text-slate-500 mt-1">False Neg</span>
-              </div>
-              <div class="bg-[#070a12]/80 border border-emerald-500/20 text-emerald-400 p-3 rounded-lg flex flex-col justify-center">
-                <span class="text-sm font-bold">89.49%</span>
-                <span class="text-[8px] uppercase text-slate-500 mt-1">True Pos</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Bảng log thời gian thực -->
-          <div class="xl:col-span-2 bg-[#0b121f] rounded-xl border border-slate-800 overflow-hidden">
-            <div class="p-6 border-b border-slate-800 flex justify-between items-center">
-              <div>
-                <h4 class="font-bold text-xs uppercase tracking-wider text-slate-100 font-mono flex items-center gap-2">
-                  <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
-                  Real-time SIEM Event Log Feed
-                </h4>
-                <p class="text-[11px] text-slate-400 mt-0.5">Mô hình AI quét định lượng các trường Vesta V1-V339, địa chỉ, email và thẻ</p>
-              </div>
-              <button onclick="resetLogs()" class="text-xs flex items-center gap-1.5 text-slate-400 hover:text-white bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-800 transition">
-                <i data-lucide="refresh-cw" class="h-3 w-3"></i> RESET EVENTS
-              </button>
-            </div>
-
-            <div class="overflow-x-auto bg-[#070a12]/50">
-              <table class="w-full text-left text-xs border-collapse font-mono">
-                <thead>
-                  <tr class="bg-slate-900/50 text-slate-400 font-bold border-b border-slate-800 uppercase tracking-wider">
-                    <th class="p-4 pl-6">Mã giao dịch</th>
-                    <th class="p-4">Thời gian</th>
-                    <th class="p-4">Số tiền</th>
-                    <th class="p-4">Nhóm Thẻ</th>
-                    <th class="p-4">Email</th>
-                    <th class="p-4">Cảnh báo SIEM</th>
-                    <th class="p-4">Mức độ rủi ro</th>
-                    <th class="p-4 pr-6">Kết luận AI</th>
-                  </tr>
-                </thead>
-                <tbody id="live-table-body" class="divide-y divide-slate-800 text-slate-300">
-                  <!-- Nội dung danh sách giao dịch sẽ chèn động bằng JS -->
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- ================= TAB 2: KIỂM TRA ĐƠN LẺ ================= -->
-      <div id="tab-single" class="hidden grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-        
-        <!-- Form nhập dữ liệu -->
-        <div class="lg:col-span-2 bg-[#0b121f] rounded-xl border border-slate-800 p-6 shadow-sm space-y-6">
-          <div class="border-b border-slate-800 pb-4">
-            <h4 class="font-bold text-xs uppercase tracking-wider text-slate-100 font-mono">Model Inference Testing - Explanatory Sandbox</h4>
-            <p class="text-[11px] text-slate-400 mt-1">Khai thác kiểm định nhanh mô phỏng dòng lỗi dữ liệu qua mô hình Ensemble Stack.</p>
-          </div>
-
-          <form id="single-predict-form" class="space-y-4 text-xs font-mono">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              
-              <div class="flex flex-col gap-1.5">
-                <label class="text-slate-400 font-bold uppercase tracking-wider text-[9px]">TransactionAmt (Số tiền giao dịch)</label>
-                <input 
-                  type="number" 
-                  id="inp-amount" 
-                  value="120.00" 
-                  class="w-full bg-[#070a12] border border-slate-800 rounded-lg px-3.5 py-2.5 text-slate-200 focus:outline-none focus:border-cyan-400 transition"
-                  required
-                />
-              </div>
-              
-              <div class="flex flex-col gap-1.5">
-                <label class="text-slate-400 font-bold uppercase tracking-wider text-[9px]">ProductCD (Danh mục sản phẩm)</label>
-                <select id="inp-product" class="w-full bg-[#070a12] border border-slate-800 rounded-lg px-3.5 py-2.5 text-slate-200 focus:outline-none focus:border-cyan-400 transition">
-                  <option value="W">W - Web Service</option>
-                  <option value="H">H - Hotel / Leisure</option>
-                  <option value="C">C - Internal Credits</option>
-                </select>
-              </div>
-
-              <div class="flex flex-col gap-1.5">
-                <label class="text-slate-400 font-bold uppercase tracking-wider text-[9px]">card1 (Mã hóa nhóm thẻ - Group ID)</label>
-                <input 
-                  type="text" 
-                  id="inp-card1" 
-                  value="13926" 
-                  class="w-full bg-[#070a12] border border-slate-800 rounded-lg px-3.5 py-2.5 text-slate-200 focus:outline-none focus:border-cyan-400 transition"
-                />
-              </div>
-
-              <div class="flex flex-col gap-1.5">
-                <label class="text-slate-400 font-bold uppercase tracking-wider text-[9px]">card4 (Hãng phát hành)</label>
-                <select id="inp-card4" class="w-full bg-[#070a12] border border-slate-800 rounded-lg px-3.5 py-2.5 text-slate-200 focus:outline-none focus:border-cyan-400 transition">
-                  <option value="visa">Visa</option>
-                  <option value="mastercard">Mastercard</option>
-                  <option value="discover">Discover</option>
-                </select>
-              </div>
-
-              <div class="flex flex-col gap-1.5">
-                <label class="text-slate-400 font-bold uppercase tracking-wider text-[9px]">card6 (Loại thẻ)</label>
-                <select id="inp-card6" class="w-full bg-[#070a12] border border-slate-800 rounded-lg px-3.5 py-2.5 text-slate-200 focus:outline-none focus:border-cyan-400 transition">
-                  <option value="debit">Debit (Thẻ ghi nợ)</option>
-                  <option value="credit">Credit (Thẻ tín dụng)</option>
-                </select>
-              </div>
-
-              <div class="flex flex-col gap-1.5">
-                <label class="text-slate-400 font-bold uppercase tracking-wider text-[9px]">P_emaildomain (Email domain mua)</label>
-                <input 
-                  type="text" 
-                  id="inp-email" 
-                  value="gmail.com" 
-                  class="w-full bg-[#070a12] border border-slate-800 rounded-lg px-3.5 py-2.5 text-slate-200 focus:outline-none focus:border-cyan-400 transition"
-                />
-              </div>
-            </div>
-
-            <button 
-              type="submit"
-              class="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold py-3 rounded-lg text-xs transition shadow-md shadow-cyan-400/10 flex items-center justify-center gap-2 uppercase"
-            >
-              <i data-lucide="shield-check" class="h-4 w-4"></i>
-              <span>Thực thi định lượng & Dự đoán</span>
-            </button>
-          </form>
-        </div>
-
-        <!-- Kết quả chẩn đoán mô phỏng SHAP Force Plot -->
-        <div class="bg-[#0b121f] rounded-xl border border-slate-800 p-6 flex flex-col justify-between min-h-[440px]">
-          <div id="predict-result-container">
-            <h4 class="font-bold text-xs uppercase tracking-wider text-slate-100 font-mono mb-4">Explainable AI Threat Intel</h4>
-            
-            <!-- Trạng thái chờ -->
-            <div id="predict-placeholder" class="text-center py-20 text-slate-500 space-y-4">
-              <div class="p-3 bg-[#070a12] rounded-full inline-block border border-slate-800">
-                <i data-lucide="cpu" class="h-8 w-8 text-slate-600"></i>
-              </div>
-              <p class="text-[11px] max-w-[200px] mx-auto leading-relaxed">Điền dữ liệu sandbox của giao dịch bên trái để hiển thị biểu đồ lực đẩy SHAP.</p>
-            </div>
-
-            <!-- Trạng thái Loading -->
-            <div id="predict-loading" class="hidden text-center py-20 text-slate-400 space-y-3">
-              <i data-lucide="refresh-cw" class="h-8 w-8 text-cyan-400 animate-spin mx-auto"></i>
-              <p class="text-[11px] font-mono text-slate-500">Evaluating shapley feature weights...</p>
-            </div>
-
-            <!-- Trạng thái hiển thị kết quả -->
-            <div id="predict-content" class="hidden space-y-6">
-              
-              <!-- Thẻ Trạng thái lớn -->
-              <div id="result-badge-card" class="p-4 rounded-xl border text-center space-y-1">
-                <p class="text-[9px] uppercase font-bold tracking-widest text-slate-400 font-mono">System Resolution</p>
-                <h4 id="result-decision" class="text-xs font-bold uppercase font-mono">APPROVED</h4>
-                <p class="text-[11px] font-mono mt-1">Confidence Level: <span id="result-score">5%</span></p>
-              </div>
-
-              <!-- Đóng góp thuộc tính (Giải thích SHAP Waterfall) -->
-              <div class="space-y-3">
-                <p class="text-[9px] uppercase font-bold text-slate-400 font-mono">SHAP Feature Force Vector:</p>
-                <div id="shap-list" class="space-y-3">
-                  <!-- Được render động bằng JS -->
+                        <div class="pt-2">
+                            <button type="submit" class="w-full py-3 bg-gradient-to-r from-hcRed-500 to-rose-600 hover:from-hcRed-600 hover:to-rose-700 text-white font-bold rounded-xl text-sm flex items-center justify-center gap-2 transition-all shadow-lg shadow-hcRed-500/20">
+                                <i data-lucide="fingerprint" class="w-5 h-5"></i>
+                                Bắt đầu Thẩm định & Dự đoán bằng AI
+                            </button>
+                        </div>
+                    </form>
                 </div>
-              </div>
 
-            </div>
-          </div>
 
-          <!-- Dataset Characteristics (NaN ratio) -->
-          <div class="pt-4 border-t border-slate-800 text-[10px] space-y-2 text-slate-400">
-            <p class="text-[9px] uppercase font-bold text-slate-400 font-mono">Missing Values (NaN Ratio) Ingested</p>
-            <div class="space-y-2">
-              <div class="flex items-center gap-2">
-                <div class="w-12 text-[9px] font-mono">card2</div>
-                <div class="flex-1 bg-[#070a12] h-1.5 rounded-full overflow-hidden">
-                  <div class="bg-amber-500 h-full" style="width: 1.5%;"></div>
+                <!-- Kết quả Đánh giá AI (Bên phải) -->
+                <div class="lg:col-span-5 flex flex-col justify-between space-y-6">
+                    <div class="glass-panel p-6 rounded-2xl flex-1 flex flex-col justify-center items-center text-center relative overflow-hidden min-h-[350px]">
+                        
+                        <!-- Lớp phủ Loading khi đang quét AI -->
+                        <div id="ai-loading-overlay" class="absolute inset-0 bg-slate-950/95 z-10 flex flex-col items-center justify-center hidden">
+                            <div class="w-16 h-16 border-4 border-hcRed-500/20 border-t-hcRed-500 rounded-full animate-spin mb-4"></div>
+                            <h4 class="font-bold text-white text-md">Thẩm định viên AI đang phân tích dữ liệu...</h4>
+                            <p class="text-xs text-slate-400 mt-1 max-w-[80%]">Đang kiểm tra lịch sử CIC, tính toán biên dòng tiền và khởi chạy mô hình xác suất vỡ nợ.</p>
+                        </div>
+
+                        <!-- Giao diện hiển thị khi chưa chạy AI -->
+                        <div id="ai-placeholder-view" class="py-12 space-y-4">
+                            <div class="w-20 h-20 bg-slate-850 text-slate-400 rounded-full flex items-center justify-center mx-auto border border-slate-700">
+                                <i data-lucide="cpu" class="w-10 h-10 animate-pulse"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-md font-semibold text-white">Chưa có kết quả phân tích</h4>
+                                <p class="text-xs text-slate-400 max-w-[300px] mx-auto mt-1 leading-relaxed">Hãy điền dữ liệu tài chính bên cạnh và bấm nút "Thẩm định" để AI khởi tạo báo cáo phân tích chi tiết.</p>
+                            </div>
+                        </div>
+
+                        <!-- Giao diện Kết quả Thật -->
+                        <div id="ai-result-view" class="w-full hidden space-y-6">
+                            <!-- Gauge đo xác suất vỡ nợ (SVG) -->
+                            <div class="relative w-44 h-44 mx-auto flex items-center justify-center">
+                                <!-- Thước đo vòng tròn -->
+                                <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                                    <circle cx="50" cy="50" r="40" stroke="rgba(255,255,255,0.05)" stroke-width="8" fill="transparent"/>
+                                    <circle id="gauge-progress" cx="50" cy="50" r="40" stroke="#ee1d23" stroke-width="8" fill="transparent" stroke-dasharray="251.2" stroke-dashoffset="180" class="transition-all duration-1000 ease-out"/>
+                                </svg>
+                                <!-- Nội dung chính giữa -->
+                                <div class="absolute text-center">
+                                    <p class="text-[10px] text-slate-400 uppercase tracking-widest font-bold">RỦI RO VỠ NỢ</p>
+                                    <h3 id="result-risk-percentage" class="text-3xl font-black text-white mt-1">28%</h3>
+                                    <p id="result-risk-level" class="text-xs font-semibold text-yellow-400 mt-1">Trạng thái: Trung bình</p>
+                                </div>
+                            </div>
+
+                            <!-- Nhận định nhanh -->
+                            <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800 text-left">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400" id="result-status-icon"></i>
+                                    <h4 class="text-xs font-bold text-white uppercase tracking-wider">Đánh giá sơ bộ của AI</h4>
+                                </div>
+                                <p id="result-summary" class="text-xs text-slate-300 leading-relaxed">
+                                    Đang tải báo cáo của Thẩm định viên AI...
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Lời khuyên & Định hình Tín dụng của AI (Chi tiết) -->
+                    <div id="ai-detailed-advice-panel" class="glass-panel p-6 rounded-2xl hidden flex-1">
+                        <h4 class="text-sm font-bold text-white mb-4 flex items-center gap-2">
+                            <i data-lucide="lightbulb" class="text-yellow-400 w-5 h-5"></i>
+                            Kế hoạch Hành động do AI đề xuất
+                        </h4>
+                        <div class="space-y-3 text-left" id="ai-advice-list">
+                            <!-- Sẽ được điền động bằng JS/Gemini -->
+                        </div>
+                    </div>
                 </div>
-                <div class="w-8 text-right text-[9px] font-mono">1.5%</div>
-              </div>
-              <div class="flex items-center gap-2">
-                <div class="w-12 text-[9px] font-mono">P_email</div>
-                <div class="flex-1 bg-[#070a12] h-1.5 rounded-full overflow-hidden">
-                  <div class="bg-amber-500 h-full" style="width: 15.2%;"></div>
+
+            </div>
+        </div>
+
+        <!-- 3. TAB: AI PORTFOLIO DATA ANALYTICS (NEW & ADVANCED) -->
+        <div id="tab-analytics" class="tab-content hidden space-y-6">
+            <!-- Thống kê vĩ mô của dữ liệu danh mục -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="glass-panel p-4 rounded-2xl">
+                    <p class="text-xs text-slate-400 uppercase font-bold tracking-wider">Tổng Hồ Sơ Được Phân Tích</p>
+                    <h3 class="text-2xl font-black text-white mt-1">1,248 <span class="text-xs text-slate-400 font-normal">hồ sơ</span></h3>
+                    <p class="text-[10px] text-emerald-400 flex items-center gap-1 mt-1">
+                        <i data-lucide="trending-up" class="w-3 h-3"></i> +14% so với tháng trước
+                    </p>
                 </div>
-                <div class="w-8 text-right text-[9px] font-mono">15.2%</div>
-              </div>
-              <div class="flex items-center gap-2">
-                <div class="w-12 text-[9px] font-mono">Vesta_V</div>
-                <div class="flex-1 bg-[#070a12] h-1.5 rounded-full overflow-hidden">
-                  <div class="bg-amber-500 h-full" style="width: 53.8%;"></div>
+                <div class="glass-panel p-4 rounded-2xl">
+                    <p class="text-xs text-slate-400 uppercase font-bold tracking-wider">Tỷ Lệ Nợ Xấu (NPL - Nhóm 3-5)</p>
+                    <h3 class="text-2xl font-black text-rose-500 mt-1">1.82%</h3>
+                    <p class="text-[10px] text-emerald-400 flex items-center gap-1 mt-1">
+                        <i data-lucide="trending-down" class="w-3 h-3"></i> -0.21% giảm rủi ro an toàn
+                    </p>
                 </div>
-                <div class="w-8 text-right text-[9px] font-mono">53.8%</div>
-              </div>
+                <div class="glass-panel p-4 rounded-2xl">
+                    <p class="text-xs text-slate-400 uppercase font-bold tracking-wider">Chỉ Số DTI Trung Bình ($DTI$)</p>
+                    <h3 class="text-2xl font-black text-yellow-500 mt-1">42.8%</h3>
+                    <p class="text-[10px] text-slate-500 mt-1">Ngưỡng kiểm soát rủi ro: $DTI \le 55\%$</p>
+                </div>
+                <div class="glass-panel p-4 rounded-2xl">
+                    <p class="text-xs text-slate-400 uppercase font-bold tracking-wider">Hệ Số Tương Quan Trễ Hạn</p>
+                    <h3 class="text-2xl font-black text-blue-400 mt-1">0.78 <span class="text-xs text-slate-400 font-normal">(Rất cao)</span></h3>
+                    <p class="text-[10px] text-slate-400 mt-1">Giữa lịch sử CIC và tỷ lệ vỡ nợ</p>
+                </div>
             </div>
-          </div>
+
+            <!-- Khu vực đồ thị trực quan -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Đồ thị 1: Phân bố Rủi ro theo Ngành nghề -->
+                <div class="glass-panel p-6 rounded-2xl">
+                    <div class="flex items-center justify-between mb-4">
+                        <h4 class="text-sm font-bold text-white flex items-center gap-2">
+                            <i data-lucide="pie-chart" class="text-hcRed-500 w-4 h-4"></i>
+                            Tỷ lệ Rủi ro nợ xấu theo Nhóm ngành nghề
+                        </h4>
+                        <span class="text-[10px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded">Cập nhật 2026</span>
+                    </div>
+                    <div class="relative h-[250px] w-full flex items-center justify-center">
+                        <canvas id="jobRiskChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Đồ thị 2: Xu thế vỡ nợ theo Chỉ số nợ nần DTI -->
+                <div class="glass-panel p-6 rounded-2xl">
+                    <div class="flex items-center justify-between mb-4">
+                        <h4 class="text-sm font-bold text-white flex items-center gap-2">
+                            <i data-lucide="line-chart" class="text-blue-500 w-4 h-4"></i>
+                            Mối liên hệ giữa Chỉ số $DTI$ và Tỷ lệ vỡ nợ thực tế
+                        </h4>
+                        <span class="text-[10px] bg-blue-500/10 text-blue-400 px-2 py-0.5 rounded">Tương quan hồi quy</span>
+                    </div>
+                    <div class="relative h-[250px] w-full flex items-center justify-center">
+                        <canvas id="dtiCorrelationChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bảng dữ liệu mẫu mô phỏng danh sách khách hàng & Công cụ AI Insights -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Bảng khách hàng -->
+                <div class="lg:col-span-8 glass-panel p-6 rounded-2xl">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+                        <div>
+                            <h4 class="text-sm font-bold text-white">Tập Dữ Liệu Đăng Ký Vay Gần Đây</h4>
+                            <p class="text-xs text-slate-400">Xem trực quan và chạy phân tích trên tệp dữ liệu kiểm thử.</p>
+                        </div>
+                        <!-- Bộ lọc nhanh -->
+                        <div class="flex items-center gap-2">
+                            <button onclick="filterCohortTable('all')" id="btn-filter-all" class="px-3 py-1.5 rounded-lg bg-hcRed-500 text-white text-xs font-semibold">Tất cả</button>
+                            <button onclick="filterCohortTable('high')" id="btn-filter-high" class="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white text-xs">Rủi ro cao (&gt;50%)</button>
+                            <button onclick="filterCohortTable('safe')" id="btn-filter-safe" class="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white text-xs">An toàn</button>
+                        </div>
+                    </div>
+
+                    <!-- Table -->
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs">
+                            <thead class="bg-slate-900 text-slate-400 uppercase tracking-wider text-[10px]">
+                                <tr>
+                                    <th class="p-3">Khách hàng</th>
+                                    <th class="p-3">Thu nhập (VNĐ)</th>
+                                    <th class="p-3">Chỉ số $DTI$</th>
+                                    <th class="p-3">Trễ CIC</th>
+                                    <th class="p-3">Công việc</th>
+                                    <th class="p-3 text-center">Xác suất Vỡ nợ (AI)</th>
+                                    <th class="p-3 text-right">Khuyến nghị</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cohort-table-body" class="divide-y divide-slate-800">
+                                <!-- Chèn dữ liệu động bằng JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Chuyên viên AI phân tích xu hướng và đề xuất chính sách (Tài liệu PDF thu gọn) -->
+                <div class="lg:col-span-4 flex flex-col justify-between">
+                    <div class="glass-panel p-6 rounded-2xl flex-1 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center gap-2 border-b border-slate-800 pb-3 mb-4">
+                                <i data-lucide="brain-circuit" class="text-emerald-400 w-5 h-5"></i>
+                                <h4 class="text-sm font-bold text-white">Báo Cáo Phân Tích Danh Mục AI</h4>
+                            </div>
+                            <p class="text-xs text-slate-300 leading-relaxed mb-4">
+                                Kích hoạt mô hình phân tích để AI tìm ra những lỗ hổng tín dụng rủi ro nhất trong tập khách hàng mẫu trên và đề xuất chính sách siết nợ/nới lỏng hạn mức.
+                            </p>
+                        </div>
+
+                        <!-- Trạng thái trống / đang tải / kết quả -->
+                        <div id="analytics-ai-box" class="p-4 bg-slate-900 rounded-xl border border-slate-800 flex-1 flex flex-col justify-center items-center min-h-[180px]">
+                            <div id="analytics-ai-placeholder" class="text-center space-y-3">
+                                <div class="w-12 h-12 bg-slate-800 text-slate-400 rounded-full flex items-center justify-center mx-auto">
+                                    <i data-lucide="sparkles" class="w-6 h-6 animate-pulse text-yellow-400"></i>
+                                </div>
+                                <button onclick="runCohortAiAnalysis()" class="px-4 py-2 bg-hcRed-500 hover:bg-hcRed-600 text-white rounded-xl text-xs font-bold transition-all">
+                                    Khởi chạy Báo cáo AI Insights
+                                </button>
+                            </div>
+
+                            <div id="analytics-ai-loading" class="hidden text-center space-y-2">
+                                <div class="w-8 h-8 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
+                                <p class="text-xs text-slate-400">Đang thực hiện hồi quy dữ liệu nhóm...</p>
+                            </div>
+
+                            <div id="analytics-ai-result" class="hidden text-left space-y-3 w-full max-h-[250px] overflow-y-auto pr-1">
+                                <!-- Điền dữ liệu phân tích từ Gemini -->
+                            </div>
+                        </div>
+
+                        <div class="pt-4 border-t border-slate-800 mt-4 text-center">
+                            <button onclick="downloadCohortCSV()" class="text-xs text-slate-400 hover:text-white flex items-center justify-center gap-1.5 mx-auto">
+                                <i data-lucide="download" class="w-4 h-4"></i> Xuất dữ liệu Excel/CSV danh mục
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-      </div>
+        <!-- 4. TAB: CALCULATOR -->
+        <div id="tab-calculator" class="tab-content hidden space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Bộ kéo sliders thông tin vay -->
+                <div class="lg:col-span-6 glass-panel p-6 rounded-2xl space-y-6">
+                    <div>
+                        <h3 class="text-base font-bold text-white">Công cụ dự toán trả góp tối ưu</h3>
+                        <p class="text-xs text-slate-400">Điều chỉnh số tiền và kỳ hạn đóng để tìm thấy kế hoạch tài chính cân bằng nhất cho bạn.</p>
+                    </div>
 
-      <!-- ================= TAB 3: QUÉT TỆP HÀNG LOẠT ================= -->
-      <div id="tab-batch" class="hidden max-w-3xl mx-auto space-y-6">
-        
-        <div class="bg-[#0b121f] rounded-xl border border-slate-800 p-8 shadow-sm text-center space-y-4">
-          <div class="mx-auto w-12 h-12 bg-cyan-950/40 border border-cyan-500/30 text-cyan-400 rounded-full flex items-center justify-center">
-            <i data-lucide="upload" class="h-6 w-6"></i>
-          </div>
-          <div>
-            <h4 class="font-bold text-xs uppercase tracking-wider text-slate-100 font-mono">Threat Hunting Batch Ingestion</h4>
-            <p class="text-[11px] text-slate-400 mt-1">Xử lý tệp kiểm tra rủi ro hàng loạt. Tự động tiền xử lý dữ liệu bị rỗng và chuyển hóa Encoder.</p>
-          </div>
+                    <!-- Slider số tiền -->
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between">
+                            <label class="text-xs font-medium text-slate-300">Cần vay bao nhiêu?</label>
+                            <span class="text-lg font-bold text-hcRed-500" id="calc-amount-label">30.000.000 đ</span>
+                        </div>
+                        <input type="range" id="calc-amount-slider" min="5000000" max="150000000" step="5000000" value="30000000" class="w-full accent-hcRed-500 cursor-pointer" oninput="updateCalculator()">
+                        <div class="flex justify-between text-[10px] text-slate-500">
+                            <span>5.000.000đ</span>
+                            <span>150.000.000đ</span>
+                        </div>
+                    </div>
 
-          <!-- Dropzone tệp tải lên -->
-          <div class="border-2 border-dashed border-slate-800 hover:border-cyan-500/50 bg-[#070a12] rounded-xl p-8 cursor-pointer relative group transition-colors">
-            <input 
-              type="file" 
-              id="batch-file-input"
-              accept=".csv,.xlsx" 
-              class="absolute inset-0 opacity-0 cursor-pointer" 
-              onchange="handleFileChange(event)"
-            />
-            <div id="file-upload-placeholder" class="text-xs text-slate-400 space-y-1 font-mono">
-              <p class="font-bold text-slate-300">Bấm hoặc kéo thả file CSV mẫu vào khu vực này</p>
-              <p class="text-[10px] text-slate-500">Hệ thống rà soát an ninh xử lý tối đa 50,000 bản ghi</p>
+                    <!-- Slider kỳ hạn -->
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between">
+                            <label class="text-xs font-medium text-slate-300">Thời gian trả nợ trong bao lâu?</label>
+                            <span class="text-lg font-bold text-hcRed-500" id="calc-term-label">12 Tháng</span>
+                        </div>
+                        <input type="range" id="calc-term-slider" min="3" max="36" step="3" value="12" class="w-full accent-hcRed-500 cursor-pointer" oninput="updateCalculator()">
+                        <div class="flex justify-between text-[10px] text-slate-500">
+                            <span>3 Tháng</span>
+                            <span>36 Tháng</span>
+                        </div>
+                    </div>
+
+                    <!-- Chọn Phương thức Tính Lãi -->
+                    <div class="space-y-2">
+                        <label class="block text-xs font-medium text-slate-300">Phương thức tính lãi suất</label>
+                        <div class="grid grid-cols-2 gap-3">
+                            <button onclick="setInterestMethod('reducing')" id="method-reducing" class="py-2.5 px-4 rounded-xl border text-xs font-semibold transition-all border-hcRed-500 bg-hcRed-500/10 text-white">
+                                Dư nợ giảm dần (Khuyên dùng)
+                            </button>
+                            <button onclick="setInterestMethod('flat')" id="method-flat" class="py-2.5 px-4 rounded-xl border text-xs font-semibold transition-all border-slate-800 text-slate-400 hover:text-white">
+                                Lãi suất cố định (Flat)
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Mức Lãi suất tham chiếu -->
+                    <div class="p-4 bg-slate-900/60 rounded-xl border border-slate-800 flex justify-between items-center">
+                        <div>
+                            <p class="text-xs font-semibold text-white">Lãi suất vay ưu đãi đề xuất</p>
+                            <p class="text-[10px] text-slate-400 mt-0.5">Dành cho tài khoản vàng của Nguyễn Minh Quân</p>
+                        </div>
+                        <span class="text-lg font-extrabold text-emerald-400">1.2% / Tháng</span>
+                    </div>
+                </div>
+
+
+                <!-- Chi tiết lịch đóng nợ hàng tháng -->
+                <div class="lg:col-span-6 glass-panel p-6 rounded-2xl flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-base font-bold text-white mb-4">Chi tiết Kế hoạch Trả góp</h3>
+                        
+                        <div class="grid grid-cols-3 gap-4 mb-6 text-center">
+                            <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-800">
+                                <p class="text-[10px] text-slate-400 uppercase font-bold">GỐC ƯỚC TÍNH / THÁNG</p>
+                                <p class="text-sm font-semibold text-white mt-1" id="calc-monthly-principal">2.500.000 đ</p>
+                            </div>
+                            <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-800">
+                                <p class="text-[10px] text-slate-400 uppercase font-bold">LÃI ƯỚC TÍNH / THÁNG</p>
+                                <p class="text-sm font-semibold text-white mt-1" id="calc-monthly-interest">360.000 đ</p>
+                            </div>
+                            <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-800">
+                                <p class="text-[10px] text-slate-400 uppercase font-bold">CẢ GỐC VÀ LÃI</p>
+                                <p class="text-sm font-semibold text-hcRed-400 mt-1" id="calc-monthly-total">2.860.000 đ</p>
+                            </div>
+                        </div>
+
+                        <!-- Lịch trả nợ chi tiết -->
+                        <div class="space-y-3 max-h-[220px] overflow-y-auto pr-2" id="calc-schedule-list">
+                            <!-- Điền động bằng JS -->
+                        </div>
+                    </div>
+
+                    <div class="pt-4 border-t border-slate-800 flex items-center justify-between gap-4 mt-4">
+                        <div class="text-xs text-slate-400">
+                            *Lưu ý: Bảng tính chỉ mang tính tham khảo dự đoán dựa trên hồ sơ hiện tại của khách hàng.
+                        </div>
+                        <button onclick="applyForCalculatedLoan()" class="px-6 py-2.5 bg-hcRed-500 hover:bg-hcRed-600 text-white font-bold rounded-xl text-xs transition-all whitespace-nowrap shadow-lg shadow-hcRed-500/15">
+                            Gửi yêu cầu Vay ngay
+                        </button>
+                    </div>
+                </div>
             </div>
-            <div id="file-upload-success" class="hidden text-xs text-cyan-400 font-mono">
-              <i data-lucide="file-spreadsheet" class="h-8 w-8 mx-auto mb-2 text-cyan-400"></i>
-              <p class="font-bold text-slate-200" id="uploaded-file-name">filename.csv</p>
-              <p class="text-[10px] text-slate-500 mt-1" id="uploaded-file-size">42 KB</p>
-            </div>
-          </div>
-
-          <div id="batch-action-container" class="hidden justify-center pt-2">
-            <button 
-              id="btn-run-batch"
-              onclick="startBatchProcessing()"
-              class="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold py-2.5 px-6 rounded-lg text-xs transition flex items-center gap-2 shadow-sm font-mono uppercase"
-            >
-              <i data-lucide="cpu" class="h-4 w-4"></i>
-              <span>Khởi chạy Batch Pipeline</span>
-            </button>
-          </div>
         </div>
 
-        <!-- Trạng thái Quét tệp Loading Pipeline -->
-        <div id="batch-loading" class="hidden bg-[#0b121f] rounded-xl border border-slate-800 p-8 shadow-sm">
-          <div class="flex flex-col items-center gap-4">
-            <div class="w-10 h-10 border-2 border-slate-800 border-t-cyan-400 rounded-full animate-spin"></div>
-            <div class="w-full max-w-md space-y-3 font-mono text-[11px] text-left">
-              <div id="step-1" class="flex items-center gap-3 text-cyan-400 font-bold">
-                <span class="w-2.5 h-2.5 rounded-full border-2 border-cyan-400 bg-cyan-400"></span>
-                <span>Bước 1: Chuẩn hóa Schema và kiểm tra rỗng (NaN Imputation)</span>
-              </div>
-              <div id="step-2" class="flex items-center gap-3 text-slate-500">
-                <span class="w-2.5 h-2.5 rounded-full border-2 border-slate-800"></span>
-                <span>Bước 2: Vector hóa & Frequency Encoding card1-card6</span>
-              </div>
-              <div id="step-3" class="flex items-center gap-3 text-slate-500">
-                <span class="w-2.5 h-2.5 rounded-full border-2 border-slate-800"></span>
-                <span>Bước 3: Chạy dự toán song song đa luồng XGBoost Predictor</span>
-              </div>
+        <!-- 5. TAB: CREDIT CARD CREATOR -->
+        <div id="tab-creditcard" class="tab-content hidden space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Khu vực điều khiển thẻ (Trái) -->
+                <div class="lg:col-span-5 glass-panel p-6 rounded-2xl space-y-6">
+                    <div>
+                        <h3 class="text-base font-bold text-white">Tùy biến Thẻ Tín Dụng Trải Nghiệm</h3>
+                        <p class="text-xs text-slate-400">Chọn giao diện thiết kế, đặt tên riêng và tùy chọn bảo mật cho thẻ của bạn.</p>
+                    </div>
+
+                    <!-- Skin selection -->
+                    <div class="space-y-3">
+                        <label class="block text-xs font-medium text-slate-300">Chọn Giao diện Thẻ</label>
+                        <div class="grid grid-cols-3 gap-2">
+                            <button onclick="changeCardTheme('hc-red')" class="p-2.5 rounded-xl border border-hcRed-500/50 bg-hcRed-500/10 text-xs font-semibold text-white">
+                                Đỏ Thương Hiệu
+                            </button>
+                            <button onclick="changeCardTheme('cyber-gold')" class="p-2.5 rounded-xl border border-slate-800 hover:border-yellow-500/50 text-xs font-semibold text-slate-400 hover:text-white">
+                                Vàng Hoàng Kim
+                            </button>
+                            <button onclick="changeCardTheme('neon-slate')" class="p-2.5 rounded-xl border border-slate-800 hover:border-indigo-500/50 text-xs font-semibold text-slate-400 hover:text-white">
+                                Đen Huyền Bí
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Custom Cardholder Name -->
+                    <div class="space-y-2">
+                        <label class="block text-xs font-medium text-slate-300">Tên in trên thẻ (Chữ không dấu)</label>
+                        <input type="text" id="card-holder-input" value="NGUYEN MINH QUAN" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-hcRed-500 uppercase" oninput="updateCardDetails()">
+                    </div>
+
+                    <!-- Tùy chọn bảo mật nhanh -->
+                    <div class="space-y-3">
+                        <label class="block text-xs font-medium text-slate-300">Bảo mật nâng cao</label>
+                        <div class="space-y-2">
+                            <label class="flex items-center justify-between p-3 bg-slate-900/60 rounded-xl border border-slate-800 cursor-pointer">
+                                <span class="text-xs text-slate-300 flex items-center gap-2">
+                                    <i data-lucide="lock" class="w-4 h-4 text-hcRed-500"></i> Khóa thẻ tạm thời
+                                </span>
+                                <input type="checkbox" id="card-lock-switch" class="sr-only" onchange="toggleCardLock()">
+                                <div class="w-10 h-5 bg-slate-700 rounded-full relative transition-all" id="card-lock-bg">
+                                    <div class="w-4 h-4 bg-white rounded-full absolute top-0.5 left-0.5 transition-all" id="card-lock-dot"></div>
+                                </div>
+                            </label>
+
+                            <label class="flex items-center justify-between p-3 bg-slate-900/60 rounded-xl border border-slate-800 cursor-pointer" onclick="toggleCardCVV()">
+                                <span class="text-xs text-slate-300 flex items-center gap-2">
+                                    <i data-lucide="eye-off" class="w-4 h-4 text-emerald-400"></i> Ẩn thông tin số thẻ / CVV
+                                </span>
+                                <button class="text-xs text-hcRed-400 font-semibold">Bật/Tắt</button>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Trực quan hóa thẻ (Phải) -->
+                <div class="lg:col-span-7 flex flex-col items-center justify-center glass-panel p-12 rounded-2xl relative overflow-hidden min-h-[400px]">
+                    <div class="absolute -top-24 -left-24 w-64 h-64 bg-hcRed-500/5 rounded-full blur-3xl"></div>
+                    
+                    <!-- Khung thẻ tín dụng siêu xịn -->
+                    <div id="credit-card-canvas" class="w-full max-w-[420px] aspect-[1.58/1] rounded-2xl p-6 flex flex-col justify-between text-white shadow-2xl relative transition-all duration-500 bg-gradient-to-br from-hcRed-600 to-rose-950 border border-hcRed-500/20 shadow-neon-red">
+                        
+                        <!-- Hiển thị khóa thẻ -->
+                        <div id="card-lock-overlay" class="absolute inset-0 bg-slate-950/80 backdrop-blur-sm z-10 flex flex-col items-center justify-center rounded-2xl hidden">
+                            <i data-lucide="shield-alert" class="w-12 h-12 text-hcRed-500 mb-2"></i>
+                            <h4 class="font-bold text-white text-base">Thẻ của bạn đang tạm khóa</h4>
+                            <p class="text-xs text-slate-400 mt-0.5">Bật lại khóa thẻ ở bảng điều khiển bên cạnh.</p>
+                        </div>
+
+                        <!-- Mặt Trước Thẻ -->
+                        <div class="flex items-start justify-between">
+                            <div>
+                                <p class="text-[10px] tracking-widest text-white/70 uppercase">HOME CREDIT DIGITAL CARD</p>
+                                <h3 class="text-xl font-bold mt-1" id="card-type-label">Platinum Visa</h3>
+                            </div>
+                            <div class="w-12 h-8 bg-white/10 rounded-lg flex items-center justify-center font-bold text-white italic text-xs">
+                                VISA
+                            </div>
+                        </div>
+
+                        <div class="space-y-4">
+                            <!-- Số thẻ -->
+                            <h2 class="text-lg md:text-xl font-mono tracking-[0.2em] text-white/90" id="card-number-label">
+                                4892 1029 3810 1290
+                            </h2>
+
+                            <!-- Chi tiết -->
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-[9px] text-white/60 uppercase">Chủ thẻ</p>
+                                    <p class="text-xs font-semibold tracking-wider" id="card-holder-label">NGUYEN MINH QUAN</p>
+                                </div>
+                                <div class="flex gap-4">
+                                    <div>
+                                        <p class="text-[9px] text-white/60 uppercase">Hạn dùng</p>
+                                        <p class="text-xs font-semibold" id="card-exp-label">09/31</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-[9px] text-white/60 uppercase">CVV</p>
+                                        <p class="text-xs font-semibold" id="card-cvv-label">***</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Nút Kích Hoạt Thẻ Vật Lý -->
+                    <div class="mt-8 text-center space-y-2">
+                        <button onclick="requestPhysicalCard()" class="px-8 py-3 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold rounded-xl text-sm transition-all shadow-lg shadow-emerald-500/20 flex items-center gap-2">
+                            <i data-lucide="truck" class="w-5 h-5"></i>
+                            Yêu cầu Phát hành thẻ cứng (Giao tận nhà)
+                        </button>
+                        <p class="text-xs text-slate-500">Miễn phí phát hành thẻ cứng lần đầu cho thành viên Vàng.</p>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
 
-        <!-- Kết quả tệp quét -->
-        <div id="batch-results-container" class="hidden bg-[#0b121f] rounded-xl border border-slate-800 p-6 shadow-sm space-y-5 animate-fadeIn">
-          
-          <!-- Tóm tắt số liệu quét -->
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center font-mono">
-            <div class="bg-[#070a12] p-3.5 rounded-xl border border-slate-800">
-              <p class="text-[9px] text-slate-500 font-bold uppercase tracking-wider">Tổng giao dịch quét</p>
-              <p class="text-lg font-bold mt-1 text-slate-200" id="batch-total-scanned">1,200</p>
-            </div>
-            <div class="bg-rose-950/20 p-3.5 rounded-xl border border-rose-900/30 text-rose-400">
-              <p class="text-[9px] text-rose-500 font-bold uppercase tracking-wider">Gian lận (Block)</p>
-              <p class="text-lg font-bold mt-1 animate-pulse" id="batch-fraud-count">42</p>
-            </div>
-            <div class="bg-amber-950/20 p-3.5 rounded-xl border border-amber-900/30 text-amber-400">
-              <p class="text-[9px] text-amber-500 font-bold uppercase tracking-wider">Nghi vấn (Review)</p>
-              <p class="text-lg font-bold mt-1" id="batch-review-count">85</p>
-            </div>
-            <div class="bg-emerald-950/20 p-3.5 rounded-xl border border-emerald-900/30 text-emerald-400">
-              <p class="text-[9px] text-emerald-500 font-bold uppercase tracking-wider">Thời gian xử lý</p>
-              <p class="text-lg font-bold mt-1" id="batch-time">0.85s</p>
-            </div>
-          </div>
+        <!-- 6. TAB: AI CHATBOT ASSISTANT -->
+        <div id="tab-assistant" class="tab-content hidden space-y-6">
+            <div class="glass-panel p-6 rounded-2xl flex flex-col h-[calc(100vh-12rem)] relative overflow-hidden">
+                <!-- Header của chatbot -->
+                <div class="border-b border-slate-800 pb-4 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-hcRed-500/10 text-hcRed-500 flex items-center justify-center">
+                            <i data-lucide="bot" class="w-6 h-6"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-bold text-white">Chuyên gia cố vấn tài chính Home Credit AI</h3>
+                            <p class="text-xs text-emerald-400 flex items-center gap-1.5">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                                Sẵn sàng giải đáp 24/7
+                            </p>
+                        </div>
+                    </div>
+                    <button onclick="clearChat()" class="text-xs text-slate-400 hover:text-white flex items-center gap-1">
+                        <i data-lucide="trash-2" class="w-4 h-4"></i> Xóa lịch sử chat
+                    </button>
+                </div>
 
-          <!-- Bảng xem trước lỗi -->
-          <div class="space-y-3">
-            <div class="flex justify-between items-center">
-              <h5 class="font-bold text-xs uppercase tracking-wider text-slate-100 font-mono">Các giao dịch phát hiện rủi ro cao</h5>
-              <button class="text-xs bg-[#070a12] text-cyan-400 hover:text-white px-3 py-1.5 rounded border border-cyan-500/30 font-mono flex items-center gap-1">
-                <i data-lucide="download" class="h-3.5 w-3.5"></i> XUẤT FILE SIEM ALERTS
-              </button>
-            </div>
+                <!-- Khu vực chứa các tin nhắn -->
+                <div class="flex-1 overflow-y-auto my-4 space-y-4 pr-2" id="chat-messages-container">
+                    <!-- Trình chào mặc định -->
+                    <div class="flex items-start gap-3">
+                        <div class="w-8 h-8 rounded-full bg-hcRed-500/10 text-hcRed-500 flex items-center justify-center shrink-0">
+                            <i data-lucide="bot" class="w-4 h-4"></i>
+                        </div>
+                        <div class="p-4 bg-slate-900 rounded-2xl max-w-[80%] border border-slate-800">
+                            <p class="text-xs text-slate-300 leading-relaxed">
+                                Xin chào anh Quân! Tôi là Trợ lý cố vấn tín dụng thông minh được cung cấp bởi Home Credit. Tôi có thể hỗ trợ anh:
+                            </p>
+                            <ul class="list-disc pl-4 mt-2 space-y-1 text-xs text-slate-400">
+                                <li>Phân tích rủi ro quá hạn và cách tối ưu điểm tín dụng cá nhân.</li>
+                                <li>Tìm kiếm gói vay trả góp phù hợp với mức thu nhập thực tế.</li>
+                                <li>Giải đáp các thắc mắc về hồ sơ, quy trình giải ngân và thanh lý hợp đồng.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
 
-            <div class="border border-slate-800 rounded-xl overflow-hidden">
-              <table class="w-full text-left text-xs text-slate-300 font-mono">
-                <thead class="bg-[#070a12] text-slate-400 border-b border-slate-800 font-bold">
-                  <tr>
-                    <th class="p-3 pl-4">Dòng tệp</th>
-                    <th class="p-3">Mã Giao Dịch</th>
-                    <th class="p-3">Số tiền (USD)</th>
-                    <th class="p-3">Hãng phát hành</th>
-                    <th class="p-3">Rủi ro (Score)</th>
-                    <th class="p-3 text-right pr-4">Cảnh báo</th>
-                  </tr>
-                </thead>
-                <tbody id="batch-preview-tbody" class="divide-y divide-slate-800">
-                  <!-- Render động bằng JS -->
-                </tbody>
-              </table>
+                <!-- Ô nhập tin nhắn -->
+                <div class="border-t border-slate-800 pt-4 flex gap-2">
+                    <input type="text" id="chat-input-field" placeholder="Ví dụ: Làm thế nào để cải thiện điểm tín dụng CIC của tôi nhanh nhất?" class="flex-1 bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-hcRed-500" onkeydown="handleChatSubmit(event)">
+                    <button onclick="sendChatMessage()" class="p-3 bg-hcRed-500 hover:bg-hcRed-600 text-white rounded-xl flex items-center justify-center transition-all">
+                        <i data-lucide="send" class="w-5 h-5"></i>
+                    </button>
+                </div>
             </div>
-          </div>
-
         </div>
-
-      </div>
-
-      <!-- ================= TAB 4: TRỢ LÝ AI COPILOT ================= -->
-      <div id="tab-copilot" class="hidden max-w-3xl mx-auto h-[550px] flex flex-col bg-[#0b121f] rounded-xl border border-slate-800 shadow-sm overflow-hidden">
-        
-        <!-- Header hộp hội thoại -->
-        <div class="p-4 bg-slate-900/50 border-b border-slate-800 flex items-center justify-between">
-          <div class="flex items-center gap-3">
-            <div class="p-2 bg-cyan-950/40 border border-cyan-500/30 text-cyan-400 rounded-lg">
-              <i data-lucide="terminal" class="h-4 w-4"></i>
-            </div>
-            <div>
-              <h4 class="font-bold text-xs text-slate-100 font-mono">IEEE-CIS Threat Intel Copilot</h4>
-              <p class="text-[10px] text-slate-400 font-mono">Hỗ trợ tra cứu cấu trúc trường dữ liệu, kỹ thuật Feature Engineering & Tuning</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Khung hiển thị cuộc hội thoại -->
-        <div id="chat-messages-container" class="flex-1 overflow-y-auto p-6 space-y-4">
-          <!-- Các tin nhắn sẽ hiển thị tại đây -->
-        </div>
-
-        <!-- Nhãn Gợi ý câu hỏi nhanh -->
-        <div class="px-6 py-2 bg-slate-900/30 border-t border-slate-800 flex flex-wrap gap-2">
-          <span class="text-[9px] text-slate-500 self-center font-bold tracking-wider font-mono">QUY QUYẾT NHANH:</span>
-          
-          <button onclick="sendQuickQuestion('Ý nghĩa các biến card1 - card6 trong IEEE-CIS là gì?')" class="text-[10px] bg-[#070a12] hover:bg-slate-850 text-slate-400 border border-slate-800 px-2.5 py-1 rounded-lg transition-colors font-mono">
-            Biến card1 - card6?
-          </button>
-          
-          <button onclick="sendQuickQuestion('Phương án xử lý sự bất cân bằng cực đoan dữ liệu?')" class="text-[10px] bg-[#070a12] hover:bg-slate-850 text-slate-400 border border-slate-800 px-2.5 py-1 rounded-lg transition-colors font-mono">
-            Imbalanced Data?
-          </button>
-
-          <button onclick="sendQuickQuestion('Giải thích ý nghĩa và cách xử lý các biến V1-V339?')" class="text-[10px] bg-[#070a12] hover:bg-slate-850 text-slate-400 border border-slate-800 px-2.5 py-1 rounded-lg transition-colors font-mono">
-            Vesta V1-V339 Features?
-          </button>
-        </div>
-
-        <!-- Ô nhập câu hỏi và nút gửi -->
-        <form id="chat-input-form" onsubmit="handleSendChatMessage(event)" class="p-4 bg-[#070a12] border-t border-slate-800 flex gap-2">
-          <input 
-            type="text" 
-            id="chat-input-field"
-            placeholder="Hỏi Copilot về Feature Engineering, mã hóa target, siêu tham số, hoặc biến V ẩn..."
-            class="flex-1 bg-[#0b121f] border border-slate-800 rounded-lg px-4 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-cyan-400 font-mono"
-          />
-          <button 
-            type="submit"
-            class="bg-cyan-400 hover:bg-cyan-300 text-slate-950 p-2.5 rounded-lg transition-colors flex items-center justify-center shadow-sm"
-          >
-            <i data-lucide="send" class="h-4 w-4"></i>
-          </button>
-        </form>
-
-      </div>
 
     </div>
-  </div>
+</main>
 
-  <!-- LẬP TRÌNH LOGIC TƯƠNG TÁC (VANILLA JS THUẦN) -->
-  <script>
-    // Dữ liệu mẫu ban đầu cho danh sách giao dịch
-    let transactionsData = [
-      { id: "4029102", amount: 150.00, product: "W", cardType: "Visa Debit", email: "gmail.com", riskScore: 0.12, status: "Safe", alertType: "NORMAL_PATTERN", timestamp: "18:45:22" },
-      { id: "4029103", amount: 2450.00, product: "H", cardType: "Mastercard Credit", email: "anonymous.com", riskScore: 0.94, status: "Fraud", alertType: "ALERT_GEO_IP_MISMATCH", timestamp: "18:43:10" },
-      { id: "4029104", amount: 89.99, product: "W", cardType: "Visa Debit", email: "yahoo.com", riskScore: 0.04, status: "Safe", alertType: "NORMAL_PATTERN", timestamp: "18:39:55" },
-      { id: "4029105", amount: 1200.00, product: "C", cardType: "Discover Credit", email: "outlook.com", riskScore: 0.78, status: "Fraud", alertType: "RULE_VPN_PROX_HIGH", timestamp: "18:35:01" },
-      { id: "4029106", amount: 15.50, product: "W", cardType: "Mastercard Debit", email: "gmail.com", riskScore: 0.01, status: "Safe", alertType: "NORMAL_PATTERN", timestamp: "18:30:14" },
-    ];
 
-    // Tạo mảng dữ liệu mô phỏng biến đổi rủi ro theo biểu đồ sóng rủi ro (Risk Waveform)
-    let chartData = [35, 45, 38, 55, 42, 60, 48, 70, 52, 65, 58, 72, 50, 68, 80, 55, 62, 74, 90, 65];
+<script>
+    // State quản lý của ứng dụng
+    const state = {
+        currentTab: 'dashboard',
+        apiKey: localStorage.getItem('hc_gemini_api_key') || '',
+        cardDetails: {
+            theme: 'hc-red',
+            holder: 'NGUYEN MINH QUAN',
+            locked: false,
+            cvvHidden: true
+        },
+        calculator: {
+            amount: 30000000,
+            term: 12,
+            rate: 0.012, // Lãi 1.2%/tháng
+            method: 'reducing' // reducing hoặc flat
+        },
+        chatHistory: [],
+        charts: {}, // Lưu trữ các phiên bản biểu đồ Chart.js
+        // Tập dữ liệu khách hàng mô phỏng để phân tích rủi ro
+        mockCohort: [
+            { id: 1, name: "Trần Văn Nam", income: 18000000, expenses: 7000000, otherDebts: 2000000, dti: 50, late: 0, job: "salaried", risk: 14, status: "Duyệt nhanh" },
+            { id: 2, name: "Lê Thị Hồng", income: 10000000, expenses: 6500000, otherDebts: 1000000, dti: 75, late: 2, job: "self-employed", risk: 58, status: "Thẩm định thêm" },
+            { id: 3, name: "Phạm Minh Cường", income: 26000000, expenses: 10000000, otherDebts: 0, dti: 38, late: 0, job: "salaried", risk: 5, status: "Duyệt nhanh" },
+            { id: 4, name: "Nguyễn Thị Thùy", income: 14000000, expenses: 9000000, otherDebts: 3500000, dti: 89, late: 4, job: "freelancer", risk: 85, status: "Từ chối" },
+            { id: 5, name: "Hoàng Văn Tuấn", income: 16000000, expenses: 8000000, otherDebts: 1500000, dti: 59, late: 1, job: "self-employed", risk: 36, status: "Duyệt có ĐK" },
+            { id: 6, name: "Vũ Đình Long", income: 32000000, expenses: 11000000, otherDebts: 0, dti: 34, late: 0, job: "salaried", risk: 3, status: "Duyệt nhanh" },
+            { id: 7, name: "Đặng Thị Gấm", income: 9000000, expenses: 7500000, otherDebts: 1000000, dti: 94, late: 3, job: "unemployed", risk: 92, status: "Từ chối" }
+        ],
+        currentCohortFilter: 'all'
+    };
 
-    // Trạng thái các luồng hoạt động
-    let isLiveActive = true;
-    let liveIntervalId = null;
-
-    // Tin nhắn khởi tạo của Trợ lý AI
-    let chatMessages = [
-      { role: 'assistant', text: 'Xin chào! Tôi là Trợ lý phân tích an ninh IEEE-CIS. Tôi có thể giải thích chi tiết ý nghĩa các trường dữ liệu và các chiến lược Feature Engineering hàng đầu để đạt điểm AUC 0.94+!' }
-    ];
-
-    // HÀM CHUYỂN ĐỔI TAB GIAO DIỆN
-    function switchTab(tabName) {
-      // Ẩn tất cả các Tab
-      document.getElementById('tab-dashboard').classList.add('hidden');
-      document.getElementById('tab-single').classList.add('hidden');
-      document.getElementById('tab-batch').classList.add('hidden');
-      document.getElementById('tab-copilot').classList.add('hidden');
-
-      // Bỏ class Active cho tất cả nút menu bên trái
-      document.getElementById('btn-dashboard').classList.remove('active-tab');
-      document.getElementById('btn-single').classList.remove('active-tab');
-      document.getElementById('btn-batch').classList.remove('active-tab');
-      document.getElementById('btn-copilot').classList.remove('active-tab');
-
-      // Hiển thị Tab được nhấp chuột và kích hoạt nút
-      document.getElementById('tab-' + tabName).classList.remove('hidden');
-      document.getElementById('btn-' + tabName).classList.add('active-tab');
-
-      // Đổi tiêu đề Header đầu trang phù hợp
-      let headerTitle = document.getElementById('header-title');
-      if (tabName === 'dashboard') headerTitle.innerText = "Hệ thống phân tích rủi ro an ninh tài chính";
-      if (tabName === 'single') headerTitle.innerText = "Data Analyst Hub - Chẩn đoán sâu giao dịch";
-      if (tabName === 'batch') headerTitle.innerText = "Thực thi kiểm định tệp Sandbox hàng loạt";
-      if (tabName === 'copilot') headerTitle.innerText = "Trợ lý an ninh AI Threat Intelligence";
-    }
-
-    // DRAW DYNAMIC LINE & AREA SVG RISK TRENDWAVE
-    function drawRealtimeChart() {
-      const svg = document.getElementById('live-svg-chart');
-      const areaPath = document.getElementById('svg-fill-area');
-      const linePath = document.getElementById('svg-line-stroke');
-      if (!svg || !areaPath || !linePath) return;
-
-      const width = 600;
-      const height = 220;
-      const paddingY = 20;
-
-      const stepX = width / (chartData.length - 1);
-      const maxVal = Math.max(...chartData, 100);
-      const minVal = 0;
-
-      let points = [];
-      for (let i = 0; i < chartData.length; i++) {
-        const x = i * stepX;
-        const y = height - paddingY - ((chartData[i] - minVal) / (maxVal - minVal)) * (height - 2 * paddingY);
-        points.push({ x, y });
-      }
-
-      // Vẽ đường Line biểu đồ sử dụng Cubic Bezier cho đường cong mềm mại
-      let lineD = `M ${points[0].x},${points[0].y}`;
-      for (let i = 1; i < points.length; i++) {
-        const cpX1 = points[i-1].x + stepX / 2;
-        const cpY1 = points[i-1].y;
-        const cpX2 = points[i].x - stepX / 2;
-        const cpY2 = points[i].y;
-        lineD += ` C ${cpX1},${cpY1} ${cpX2},${cpY2} ${points[i].x},${points[i].y}`;
-      }
-      linePath.setAttribute('d', lineD);
-
-      // Điền kín vùng Gradient nằm phía dưới đường sóng
-      let areaD = lineD + ` L ${width},${height} L 0,${height} Z`;
-      areaPath.setAttribute('d', areaD);
-    }
-
-    // MÔ PHỎNG DÒNG DỮ LIỆU CHẠY REAL-TIME (DASHBOARD)
-    function renderLiveTransactions() {
-      const tbody = document.getElementById('live-table-body');
-      tbody.innerHTML = '';
-
-      transactionsData.forEach(txn => {
-        let statusBadge = '';
-        if (txn.status === 'Safe') {
-          statusBadge = `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">✓ Secure</span>`;
-        } else if (txn.status === 'Review') {
-          statusBadge = `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20">⚠ Review</span>`;
+    // Khởi tạo các biểu tượng lucide khi tải trang
+    window.onload = function() {
+        lucide.createIcons();
+        if (state.apiKey) {
+            document.getElementById('gemini-api-key').value = state.apiKey;
+            updateApiStatus(true);
         } else {
-          statusBadge = `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-rose-500/10 text-rose-400 border border-rose-500/20">✗ Blocked</span>`;
+            updateApiStatus(false);
         }
+        updateCalculator();
+        renderCohortTable();
+        initAnalyticsCharts();
+    };
 
-        const tr = document.createElement('tr');
-        tr.className = 'hover:bg-slate-800/10 transition';
-        tr.innerHTML = `
-          <td class="p-4 pl-6 font-semibold text-cyan-400">${txn.id}</td>
-          <td class="p-4 text-slate-400 font-mono text-[11px]">${txn.timestamp}</td>
-          <td class="p-4 font-bold text-slate-100">$${txn.amount.toFixed(2)}</td>
-          <td class="p-4"><span class="px-2 py-0.5 bg-slate-900 border border-slate-800 text-slate-400 rounded font-semibold text-[10px]">${txn.product}</span></td>
-          <td class="p-4 text-slate-300 font-semibold">${txn.cardType}</td>
-          <td class="p-4 text-slate-400 font-mono">${txn.email}</td>
-          <td class="p-4 text-slate-400 text-xs">${txn.alertType || 'NORMAL_PATTERN'}</td>
-          <td class="p-4">
-            <div class="flex items-center gap-1.5">
-              <span class="font-bold text-slate-200 font-mono">${(txn.riskScore * 100).toFixed(0)}%</span>
-            </div>
-          </td>
-          <td class="p-4 pr-6">${statusBadge}</td>
-        `;
-        tbody.appendChild(tr);
-      });
-      // Vẽ lại các Icon Lucide
-      lucide.createIcons();
-    }
-
-    // Bật/Tắt dòng tự động cập nhật
-    function toggleLiveStream() {
-      isLiveActive = !isLiveActive;
-      const btn = document.getElementById('btn-live');
-      const indicator = document.getElementById('live-indicator');
-      const text = document.getElementById('live-text');
-
-      if (isLiveActive) {
-        btn.className = "flex items-center gap-2 px-4 py-1.5 rounded-md text-[10px] font-bold font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 transition uppercase tracking-wider";
-        indicator.className = "h-2.5 w-2.5 rounded-full bg-emerald-400 animate-pulse";
-        text.innerText = "Real-time Intel active";
-        startLiveInterval();
-      } else {
-        btn.className = "flex items-center gap-2 px-4 py-1.5 rounded-md text-[10px] font-bold font-mono bg-slate-800 text-slate-500 border border-slate-700 transition uppercase tracking-wider";
-        indicator.className = "h-2.5 w-2.5 rounded-full bg-slate-500";
-        text.innerText = "Feed Paused";
-        clearInterval(liveIntervalId);
-      }
-    }
-
-    function startLiveInterval() {
-      liveIntervalId = setInterval(() => {
-        const randomId = Math.floor(4000000 + Math.random() * 100000);
-        const randomAmt = (Math.random() * 1200 + 5).toFixed(2);
-        const products = ["W", "H", "C", "R"];
-        const cards = ["Visa Debit", "Mastercard Credit", "Visa Credit"];
-        const emails = ["gmail.com", "yahoo.com", "anonymous.com", "protonmail.com"];
-        const alerts = ["NORMAL_PATTERN", "ALERT_GEO_IP_MISMATCH", "RULE_VPN_PROX_HIGH", "MODEL_HIGH_VELOCITY_C1"];
+    // Đổi tab mượt mà
+    function switchTab(tabId) {
+        // Hide all tabs
+        document.querySelectorAll('.tab-content').forEach(tab => {
+            tab.classList.add('hidden');
+        });
         
-        const randomProduct = products[Math.floor(Math.random() * products.length)];
-        const randomCard = cards[Math.floor(Math.random() * cards.length)];
-        const randomEmail = emails[Math.floor(Math.random() * emails.length)];
-        const randomAlert = alerts[Math.floor(Math.random() * alerts.length)];
-        
-        // Mô phỏng chấm điểm rủi ro cơ bản
-        let score = Math.random() * 0.35;
-        if (parseFloat(randomAmt) > 800) score += 0.40;
-        if (randomEmail === "anonymous.com" || randomAlert === "RULE_VPN_PROX_HIGH") score += 0.30;
-        score = Math.min(score, 0.99);
+        // Show selected tab
+        document.getElementById(`tab-${tabId}`).classList.remove('hidden');
 
-        let status = "Safe";
-        if (score > 0.65) status = "Fraud";
-        else if (score > 0.35) status = "Review";
-
-        const now = new Date();
-        const timestamp = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
-
-        const newTxn = {
-          id: randomId,
-          amount: parseFloat(randomAmt),
-          product: randomProduct,
-          cardType: randomCard,
-          email: randomEmail,
-          riskScore: parseFloat(score.toFixed(2)),
-          status: status,
-          alertType: randomAlert,
-          timestamp: timestamp
-        };
-
-        transactionsData = [newTxn, ...transactionsData.slice(0, 4)];
-        
-        // Cập nhật sóng biểu đồ
-        let nextChartPoint = Math.floor(Math.random() * 60 + 20);
-        if (status === 'Fraud') nextChartPoint += 30;
-        chartData.push(nextChartPoint);
-        chartData = chartData.slice(1);
-
-        // Tăng giả lập tổng số giao dịch đã quét
-        const totalNode = document.getElementById('stat-total');
-        let currentTotal = parseInt(totalNode.innerText.replace(/,/g, ''));
-        totalNode.innerText = (currentTotal + 1).toLocaleString();
-
-        renderLiveTransactions();
-        drawRealtimeChart();
-      }, 4000);
-    }
-
-    function resetLogs() {
-      transactionsData = [
-        { id: "4029102", amount: 150.00, product: "W", cardType: "Visa Debit", email: "gmail.com", riskScore: 0.12, status: "Safe", alertType: "NORMAL_PATTERN", timestamp: "18:45:22" },
-        { id: "4029103", amount: 2450.00, product: "H", cardType: "Mastercard Credit", email: "anonymous.com", riskScore: 0.94, status: "Fraud", alertType: "ALERT_GEO_IP_MISMATCH", timestamp: "18:43:10" },
-        { id: "4029104", amount: 89.99, product: "W", cardType: "Visa Debit", email: "yahoo.com", riskScore: 0.04, status: "Safe", alertType: "NORMAL_PATTERN", timestamp: "18:39:55" },
-        { id: "4029105", amount: 1200.00, product: "C", cardType: "Discover Credit", email: "outlook.com", riskScore: 0.78, status: "Fraud", alertType: "RULE_VPN_PROX_HIGH", timestamp: "18:35:01" },
-        { id: "4029106", amount: 15.50, product: "W", cardType: "Mastercard Debit", email: "gmail.com", riskScore: 0.01, status: "Safe", alertType: "NORMAL_PATTERN", timestamp: "18:30:14" },
-      ];
-      renderLiveTransactions();
-    }
-
-    // MÔ PHỎNG KIỂM TRA GIAO DỊCH ĐƠN LẺ
-    document.getElementById('single-predict-form').addEventListener('submit', function(e) {
-      e.preventDefault();
-
-      // Hiện trạng thái Loading
-      document.getElementById('predict-placeholder').classList.add('hidden');
-      document.getElementById('predict-content').classList.add('hidden');
-      document.getElementById('predict-loading').classList.remove('hidden');
-
-      // Giả lập xử lý model 1.5 giây
-      setTimeout(() => {
-        const amt = parseFloat(document.getElementById('inp-amount').value);
-        const product = document.getElementById('inp-product').value;
-        const card4 = document.getElementById('inp-card4').value;
-        const card6 = document.getElementById('inp-card6').value;
-        const email = document.getElementById('inp-email').value;
-
-        const isHighAmt = amt > 1000;
-        const isSuspiciousEmail = email === 'anonymous.com';
-        const isCreditHigh = card6 === 'credit' && amt > 400;
-
-        let baseScore = 0.05;
-        let shapContributions = [];
-
-        if (isHighAmt) {
-          baseScore += 0.50;
-          shapContributions.push({ name: "TransactionAmt (Giao dịch cực đại)", impact: "+50%", color: "bg-rose-500", type: 'push', textCol: 'text-rose-400' });
-        } else {
-          shapContributions.push({ name: "TransactionAmt (Ngưỡng an toàn)", impact: "-12%", color: "bg-emerald-500", type: 'pull', textCol: 'text-emerald-400' });
-        }
-
-        if (isSuspiciousEmail) {
-          baseScore += 0.35;
-          shapContributions.push({ name: "P_emaildomain (Email ẩn danh rủi ro)", impact: "+35%", color: "bg-rose-500", type: 'push', textCol: 'text-rose-400' });
-        } else {
-          shapContributions.push({ name: "P_emaildomain (Email hệ thống sạch)", impact: "-15%", color: "bg-emerald-500", type: 'pull', textCol: 'text-emerald-400' });
-        }
-
-        if (isCreditHigh) {
-          baseScore += 0.20;
-          shapContributions.push({ name: "card6 (Sử dụng thẻ tín dụng)", impact: "+20%", color: "bg-rose-500", type: 'push', textCol: 'text-rose-400' });
-        }
-
-        const finalScore = Math.min(Math.max(baseScore + (Math.random() * 0.08 - 0.04), 0.01), 0.99);
-        
-        let status = "Safe";
-        let decisionText = "APPROVED (SAFE EVENT)";
-        let badgeClass = "bg-emerald-500/10 border-emerald-500/20 text-emerald-400";
-
-        if (finalScore > 0.70) {
-          status = "Fraud";
-          decisionText = "BLOCK RESOLUTION (CRITICAL)";
-          badgeClass = "bg-rose-500/10 border-rose-500/20 text-rose-400 font-bold";
-        } else if (finalScore > 0.35) {
-          status = "Review";
-          decisionText = "MANUAL REVIEW REQUESTED";
-          badgeClass = "bg-amber-500/10 border-amber-500/20 text-amber-400 font-bold";
-        }
-
-        if (shapContributions.length < 3) {
-          shapContributions.push({ name: "card1 (Tần suất định danh thẻ sạch)", impact: "-20%", color: "bg-emerald-500", type: 'pull', textCol: 'text-emerald-400' });
-          shapContributions.push({ name: "addr1 (Vùng giao dịch an toàn)", impact: "-18%", color: "bg-emerald-500", type: 'pull', textCol: 'text-emerald-400' });
-        }
-
-        // Đổ dữ liệu vào giao diện
-        document.getElementById('result-badge-card').className = `p-4 rounded-xl border text-center space-y-1 ${badgeClass}`;
-        document.getElementById('result-decision').innerText = decisionText;
-        document.getElementById('result-score').innerText = `${(finalScore * 100).toFixed(1)}%`;
-
-        const shapList = document.getElementById('shap-list');
-        shapList.innerHTML = '';
-        shapContributions.forEach(item => {
-          const numericalVal = item.impact.replace(/[^0-9]/g, '');
-          shapList.innerHTML += `
-            <div class="space-y-1">
-              <div class="flex justify-between text-[11px] font-mono">
-                <span class="text-slate-500">${item.name}</span>
-                <span class="font-bold ${item.textCol}">${item.impact}</span>
-              </div>
-              <div class="w-full bg-[#070a12] h-1.5 rounded-full overflow-hidden">
-                <div class="${item.color} h-full" style="width: ${numericalVal}%; margin-left: ${item.type === 'pull' ? 'auto' : '0'}"></div>
-              </div>
-            </div>
-          `;
+        // Reset nav button states
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.classList.remove('text-hcRed-500', 'bg-hcRed-500/10');
+            btn.classList.add('text-slate-400', 'hover:text-white', 'hover:bg-slate-800/50');
         });
 
-        // Ẩn Loading và hiện kết quả
-        document.getElementById('predict-loading').classList.add('hidden');
-        document.getElementById('predict-content').classList.remove('hidden');
-
-        // Đưa giao dịch này vào nhật ký live
-        const now = new Date();
-        const timestamp = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
-        const newTxn = {
-          id: Math.floor(4000000 + Math.random() * 100000),
-          amount: amt,
-          product: product,
-          cardType: `${card4} ${card6}`,
-          email: email,
-          riskScore: parseFloat(finalScore.toFixed(2)),
-          status: status,
-          alertType: "SANDBOX_DIAGNOSIS",
-          timestamp: timestamp
-        };
-        transactionsData = [newTxn, ...transactionsData.slice(0, 4)];
-        renderLiveTransactions();
-
-      }, 1500);
-    });
-
-    // MÔ PHỎNG TẢI LÊN FILE QUÉT HÀNG LOẠT
-    function handleFileChange(event) {
-      const file = event.target.files[0];
-      if (file) {
-        document.getElementById('file-upload-placeholder').classList.add('hidden');
-        document.getElementById('file-upload-success').classList.remove('hidden');
-        
-        document.getElementById('uploaded-file-name').innerText = file.name;
-        document.getElementById('uploaded-file-size').innerText = `${(file.size / 1024).toFixed(1)} KB`;
-        
-        // Hiện nút thực hiện quét
-        document.getElementById('batch-action-container').className = "flex justify-center pt-2";
-        // Ẩn bảng kết quả cũ nếu có
-        document.getElementById('batch-results-container').classList.add('hidden');
-      }
-    }
-
-    function startBatchProcessing() {
-      // Ẩn nút hành động, hiện Loading
-      document.getElementById('batch-action-container').className = "hidden";
-      document.getElementById('batch-loading').classList.remove('hidden');
-
-      const step1 = document.getElementById('step-1');
-      const step2 = document.getElementById('step-2');
-      const step3 = document.getElementById('step-3');
-
-      // Mô phỏng chuỗi tiến trình xử lý Pipeline
-      setTimeout(() => {
-        step1.className = "flex items-center gap-3 text-emerald-400 font-bold done";
-        step1.querySelector('span').className = "w-2.5 h-2.5 rounded-full border-2 border-emerald-400 bg-emerald-400";
-        step2.className = "flex items-center gap-3 text-cyan-400 font-bold active";
-        step2.querySelector('span').className = "w-2.5 h-2.5 rounded-full border-2 border-cyan-400 bg-cyan-400";
-        
-        setTimeout(() => {
-          step2.className = "flex items-center gap-3 text-emerald-400 font-bold done";
-          step2.querySelector('span').className = "w-2.5 h-2.5 rounded-full border-2 border-emerald-400 bg-emerald-400";
-          step3.className = "flex items-center gap-3 text-cyan-400 font-bold active";
-          step3.querySelector('span').className = "w-2.5 h-2.5 rounded-full border-2 border-cyan-400 bg-cyan-400";
-
-          setTimeout(() => {
-            step3.className = "flex items-center gap-3 text-emerald-400 font-bold done";
-            step3.querySelector('span').className = "w-2.5 h-2.5 rounded-full border-2 border-emerald-400 bg-emerald-400";
-
-            // Mô phỏng kết quả phân tích tệp
-            document.getElementById('batch-total-scanned').innerText = "1,540";
-            document.getElementById('batch-fraud-count').innerText = "52";
-            document.getElementById('batch-review-count').innerText = "118";
-            document.getElementById('batch-time').innerText = "1.24s";
-
-            const tbody = document.getElementById('batch-preview-tbody');
-            tbody.innerHTML = '';
-
-            const previewList = Array.from({ length: 6 }, (_, i) => {
-              const score = i === 0 ? 0.98 : i === 1 ? 0.87 : i === 2 ? 0.54 : Math.random() * 0.12;
-              return {
-                row: i + 2,
-                id: `TXN-8014${i}`,
-                amount: (Math.random() * 700 + 15).toFixed(2),
-                card: i % 2 === 0 ? "Visa Credit" : "Mastercard Debit",
-                score: score,
-                status: score > 0.70 ? "Fraud" : score > 0.35 ? "Review" : "Safe"
-              };
-            });
-
-            previewList.forEach(item => {
-              let badge = '';
-              if (item.status === 'Fraud') {
-                badge = `<span class="sec-tag tag-critical">✗ Block</span>`;
-              } else if (item.status === 'Review') {
-                badge = `<span class="sec-tag tag-warning">⚠ Review</span>`;
-              } else {
-                badge = `<span class="sec-tag tag-safe">✓ Safe</span>`;
-              }
-
-              const tr = document.createElement('tr');
-              tr.innerHTML = `
-                <td class="p-3 pl-4 font-mono text-slate-500">#${item.row}</td>
-                <td class="p-3 font-semibold text-slate-100">${item.id}</td>
-                <td class="p-3 font-semibold">$${item.amount}</td>
-                <td class="p-3 text-slate-300">${item.card}</td>
-                <td class="p-3 font-bold text-slate-300">${(item.score * 100).toFixed(0)}%</td>
-                <td class="p-3 text-right pr-4">${badge}</td>
-              `;
-              tbody.appendChild(tr);
-            });
-
-            // Ẩn Loading, Hiện Kết quả
-            document.getElementById('batch-loading').classList.add('hidden');
-            document.getElementById('batch-results-container').classList.remove('hidden');
-
-            // Reset các bước về ban đầu
-            step1.className = "flex items-center gap-3 text-cyan-400 font-bold active";
-            step1.querySelector('span').className = "w-2.5 h-2.5 rounded-full border-2 border-cyan-400 bg-cyan-400";
-            step2.className = "flex items-center gap-3 text-slate-500";
-            step2.querySelector('span').className = "w-2.5 h-2.5 rounded-full border-2 border-slate-850";
-            step3.className = "flex items-center gap-3 text-slate-500";
-            step3.querySelector('span').className = "w-2.5 h-2.5 rounded-full border-2 border-slate-850";
-
-          }, 1000);
-        }, 1000);
-      }, 1000);
-    }
-
-    // MÔ PHỎNG TRÒ CHUYỆN VỚI AI COPILOT
-    function renderChatMessages() {
-      const chatContainer = document.getElementById('chat-messages-container');
-      chatContainer.innerHTML = '';
-
-      chatMessages.forEach(msg => {
-        const isBot = msg.role === 'assistant';
-        const msgDiv = document.createElement('div');
-        msgDiv.className = `intel-msg-bubble ${isBot ? 'bot' : 'user'}`;
-        
-        msgDiv.innerHTML = `
-          <div class="intel-avatar ${isBot ? 'bot' : 'user'}">
-            ${isBot ? 'SIEM' : 'DA'}
-          </div>
-          <div class="intel-msg-text">
-            <p>${msg.text}</p>
-          </div>
-        `;
-        chatContainer.appendChild(msgDiv);
-      });
-
-      // Tự động cuộn xuống dưới cùng
-      chatContainer.scrollTop = chatContainer.scrollHeight;
-    }
-
-    function handleSendChatMessage(e) {
-      if (e) e.preventDefault();
-      const input = document.getElementById('chat-input-field');
-      const text = input.value.trim();
-      if (!text) return;
-
-      chatMessages.push({ role: 'user', text: text });
-      input.value = '';
-      renderChatMessages();
-
-      // Giả lập bot phản hồi sau 1.0 giây
-      setTimeout(() => {
-        let reply = "Tôi đã tiếp nhận truy vấn an ninh. Trong bộ dữ liệu IEEE-CIS, các biến C (C1-C14) thể hiện số lượng cuộc gọi liên kết địa chỉ IP/thẻ, các biến D (D1-D15) là thời gian trễ (Time deltas) giữa các hành động.";
-        
-        const lower = text.toLowerCase();
-        if (lower.includes('card')) {
-          reply = "Đối với chuyên viên phân tích rủi ro, `card1` đại diện cho định danh mã ngân hàng phát hành thẻ. Kỹ thuật Feature Engineering khuyến nghị là Gom cụm (Groupby) theo card1 và TransactionAmt để tính Z-Score, nhằm phát hiện sự sai lệch mức chi tiêu bất thường.";
-        } else if (lower.includes('mô hình') || lower.includes('model') || lower.includes('lightgbm') || lower.includes('xgboost')) {
-          reply = "Vì đây là bài toán mất cân bằng dữ liệu cực đoan (~3.5% rủi ro), việc sử dụng LightGBM hoặc CatBoost với cơ chế đánh giá Focal Loss hoặc điều chỉnh tham số scale_pos_weight là bắt buộc. Điều này giúp tối đa hóa chỉ số AUC-ROC thay vì Accuracy thông thường.";
-        } else if (lower.includes('biến v') || lower.includes('v1') || lower.includes('vesta')) {
-          reply = "Các biến V (V1-V339) của đối tác Vesta chứa nhiều giá trị trống (Missing Values) do kỹ thuật đối sánh đa lớp thiết bị. DA nên sử dụng phương án gom cụm PCA hoặc loại bỏ các đặc trưng tương quan chéo (correlation > 0.9) để ngăn chặn hiện tượng Overfitting.";
+        // Activate current nav button
+        const activeNav = document.getElementById(`nav-${tabId}`);
+        if (activeNav) {
+            activeNav.classList.remove('text-slate-400', 'hover:text-white', 'hover:bg-slate-800/50');
+            activeNav.classList.add('text-hcRed-500', 'bg-hcRed-500/10');
         }
 
-        chatMessages.push({ role: 'assistant', text: reply });
-        renderChatMessages();
-      }, 1000);
+        // Cập nhật tiêu đề trên header
+        const pageTitleText = activeNav.textContent.trim();
+        const iconName = activeNav.querySelector('i').getAttribute('data-lucide');
+        document.getElementById('page-title').innerHTML = `
+            <i data-lucide="${iconName}" class="w-5 h-5 text-hcRed-500"></i>
+            ${pageTitleText}
+        `;
+        lucide.createIcons();
+
+        state.currentTab = tabId;
+
+        // Nếu chuyển sang tab analytics, khởi tạo lại biểu đồ để đảm bảo hiển thị đúng kích thước
+        if (tabId === 'analytics') {
+            setTimeout(() => {
+                initAnalyticsCharts();
+            }, 100);
+        }
     }
 
-    function sendQuickQuestion(questionText) {
-      document.getElementById('chat-input-field').value = questionText;
-      handleSendChatMessage();
+    // Save API key
+    function saveApiKey() {
+        const key = document.getElementById('gemini-api-key').value.trim();
+        if (key) {
+            localStorage.setItem('hc_gemini_api_key', key);
+            state.apiKey = key;
+            showToast('Lưu API Key thành công!', 'success');
+            updateApiStatus(true);
+        } else {
+            localStorage.removeItem('hc_gemini_api_key');
+            state.apiKey = '';
+            showToast('Đã xóa API Key cá nhân. Sử dụng khóa mặc định.', 'info');
+            updateApiStatus(false);
+        }
     }
 
-    // KHỞI CHẠY LẦN ĐẦU KHI TRANG WEB TẢI XONG
-    window.onload = function() {
-      renderLiveTransactions();
-      startLiveInterval();
-      drawRealtimeChart();
-      renderChatMessages();
-      lucide.createIcons();
+    function updateApiStatus(hasKey) {
+        const statusDot = document.getElementById('api-status');
+        if (hasKey) {
+            statusDot.className = "inline-block w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse";
+        } else {
+            statusDot.className = "inline-block w-2.5 h-2.5 rounded-full bg-yellow-500";
+        }
     }
-  </script>
+
+
+    // Toast Notifications
+    function showToast(message, type = 'info') {
+        const container = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        
+        let bgColor = 'bg-slate-900';
+        let borderColor = 'border-slate-800';
+        let textColor = 'text-white';
+        let iconName = 'info';
+        
+        if (type === 'success') {
+            bgColor = 'bg-emerald-950/90';
+            borderColor = 'border-emerald-500/30';
+            textColor = 'text-emerald-400';
+            iconName = 'check-circle';
+        } else if (type === 'error') {
+            bgColor = 'bg-rose-950/90';
+            borderColor = 'border-rose-500/30';
+            textColor = 'text-rose-400';
+            iconName = 'alert-triangle';
+        } else if (type === 'warning') {
+            bgColor = 'bg-amber-950/90';
+            borderColor = 'border-amber-500/30';
+            textColor = 'text-amber-400';
+            iconName = 'alert-circle';
+        }
+
+        toast.className = `p-4 rounded-xl border ${bgColor} ${borderColor} ${textColor} flex items-center gap-3 shadow-lg pointer-events-auto transition-all duration-300 transform translate-x-12 opacity-0`;
+        toast.innerHTML = `
+            <i data-lucide="${iconName}" class="w-5 h-5 shrink-0"></i>
+            <span class="text-xs font-semibold">${message}</span>
+        `;
+        
+        container.appendChild(toast);
+        lucide.createIcons();
+
+        // Animate in
+        setTimeout(() => {
+            toast.classList.remove('translate-x-12', 'opacity-0');
+        }, 10);
+
+        // Remove toast
+        setTimeout(() => {
+            toast.classList.add('translate-x-12', 'opacity-0');
+            setTimeout(() => {
+                toast.remove();
+            }, 300);
+        }, 3500);
+    }
+
+
+    // ==========================================
+    // TAB ANALYTICS: PHÂN TÍCH BIỂU ĐỒ & DỮ LIỆU
+    // ==========================================
+
+    function initAnalyticsCharts() {
+        // Hủy biểu đồ cũ nếu đã tồn tại để tránh xung đột
+        if (state.charts.jobRisk) state.charts.jobRisk.destroy();
+        if (state.charts.dtiCorrelation) state.charts.dtiCorrelation.destroy();
+
+        // 1. Chart: Rủi ro nợ xấu theo ngành nghề
+        const ctxJob = document.getElementById('jobRiskChart').getContext('2d');
+        state.charts.jobRisk = new Chart(ctxJob, {
+            type: 'doughnut',
+            data: {
+                labels: ['Nhân viên văn phòng', 'Tự doanh / Chủ hộ', 'Freelancer', 'Chưa có việc ổn định'],
+                datasets: [{
+                    label: 'Tỷ lệ nợ quá hạn trung bình (%)',
+                    data: [3.2, 14.8, 22.4, 48.5],
+                    backgroundColor: [
+                        'rgba(16, 185, 129, 0.7)', // Emerald
+                        'rgba(245, 158, 11, 0.7)', // Amber
+                        'rgba(59, 130, 246, 0.7)',  // Blue
+                        'rgba(238, 29, 35, 0.7)'   // Home Credit Red
+                    ],
+                    borderColor: [
+                        '#10b981', '#f59e0b', '#3b82f6', '#ee1d23'
+                    ],
+                    borderWidth: 1.5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { color: '#94a3b8', font: { size: 10 } }
+                    }
+                }
+            }
+        });
+
+        // 2. Chart: Mối liên hệ DTI (Debt-to-Income) và Tỷ lệ vỡ nợ
+        const ctxDti = document.getElementById('dtiCorrelationChart').getContext('2d');
+        state.charts.dtiCorrelation = new Chart(ctxDti, {
+            type: 'line',
+            data: {
+                labels: ['10%', '20%', '30%', '40%', '50%', '60%', '70%', '80%', '90%+',],
+                datasets: [{
+                    label: 'Xác suất xảy ra Nợ xấu thực tế (%)',
+                    data: [1.2, 2.5, 4.1, 7.8, 14.5, 28.2, 49.0, 72.5, 91.8],
+                    borderColor: '#ee1d23',
+                    backgroundColor: 'rgba(238, 29, 35, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    borderWidth: 2,
+                    pointBackgroundColor: '#ee1d23'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        labels: { color: '#94a3b8', font: { size: 10 } }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                        ticks: { color: '#94a3b8', font: { size: 9 } }
+                    },
+                    y: {
+                        grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                        ticks: { color: '#94a3b8', font: { size: 9 } }
+                    }
+                }
+            }
+        });
+    }
+
+    // Hiển thị danh sách khách hàng trong bảng
+    function renderCohortTable() {
+        const tableBody = document.getElementById('cohort-table-body');
+        tableBody.innerHTML = '';
+
+        const filteredList = state.mockCohort.filter(item => {
+            if (state.currentCohortFilter === 'high') return item.risk >= 50;
+            if (state.currentCohortFilter === 'safe') return item.risk < 30;
+            return true;
+        });
+
+        filteredList.forEach(item => {
+            // Định hình nhãn rủi ro
+            let riskBadgeClass = 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20';
+            if (item.risk >= 70) riskBadgeClass = 'bg-rose-500/10 text-rose-400 border border-rose-500/20';
+            else if (item.risk >= 30) riskBadgeClass = 'bg-yellow-500/10 text-yellow-400 border border-yellow-500/20';
+
+            // Định hình nghề nghiệp tiếng Việt
+            const jobMap = {
+                salaried: "Nhân viên VP",
+                "self-employed": "Chủ tự doanh",
+                freelancer: "Freelancer",
+                unemployed: "Chưa cố định"
+            };
+
+            const tr = document.createElement('tr');
+            tr.className = "hover:bg-slate-900/40 transition-all";
+            tr.innerHTML = `
+                <td class="p-3 font-semibold text-white">${item.name}</td>
+                <td class="p-3 text-slate-300">${item.income.toLocaleString('vi-VN')} đ</td>
+                <td class="p-3 font-mono text-slate-300">${item.dti}%</td>
+                <td class="p-3 text-center text-slate-400 font-semibold">${item.late} lần</td>
+                <td class="p-3 text-slate-400">${jobMap[item.job] || item.job}</td>
+                <td class="p-3 text-center">
+                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${riskBadgeClass}">
+                        ${item.risk}%
+                    </span>
+                </td>
+                <td class="p-3 text-right">
+                    <span class="text-[11px] font-medium text-slate-300">${item.status}</span>
+                </td>
+            `;
+            tableBody.appendChild(tr);
+        });
+    }
+
+    function filterCohortTable(filterType) {
+        state.currentCohortFilter = filterType;
+        
+        // Reset button styles
+        document.querySelectorAll('[id^="btn-filter-"]').forEach(btn => {
+            btn.className = "px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white text-xs";
+        });
+
+        // Set active button
+        const activeBtn = document.getElementById(`btn-filter-${filterType}`);
+        if (activeBtn) {
+            activeBtn.className = "px-3 py-1.5 rounded-lg bg-hcRed-500 text-white text-xs font-semibold";
+        }
+
+        renderCohortTable();
+    }
+
+    // Chạy AI để phân tích xu hướng danh mục dựa trên mockCohort dữ liệu thực tế
+    async function runCohortAiAnalysis() {
+        const placeholder = document.getElementById('analytics-ai-placeholder');
+        const loading = document.getElementById('analytics-ai-loading');
+        const result = document.getElementById('analytics-ai-result');
+
+        placeholder.classList.add('hidden');
+        loading.classList.remove('hidden');
+        result.classList.add('hidden');
+
+        try {
+            // Chuyển tập dữ liệu thành chuỗi để truyền cho Gemini
+            const cohortString = state.mockCohort.map(item => 
+                `- KH: ${item.name}, Thu nhập: ${item.income}đ, DTI: ${item.dti}%, Trễ CIC: ${item.late} lần, Công việc: ${item.job}, Xác suất vỡ nợ AI chấm: ${item.risk}%`
+            ).join('\n');
+
+            const prompt = `Bạn là Giám đốc Quản trị Rủi ro Tín dụng tại Home Credit Việt Nam. Hãy thực hiện một phân tích định lượng dựa trên tập dữ liệu hồ sơ thử nghiệm dưới đây:\n${cohortString}\n\nHãy rút ra 3 phát hiện chính (Key Findings) về mối tương quan rủi ro của nhóm này (đặc biệt liên quan đến chỉ số DTI và lịch sử CIC) và đưa ra 2 đề xuất cụ thể để siết chặt hoặc nới lỏng chính sách cho vay. Trả lời ngắn gọn, súc tích dưới dạng các đoạn văn có cấu trúc rõ ràng bằng tiếng Việt.`;
+
+            const aiReply = await callGeminiApi(prompt, state.apiKey);
+
+            loading.classList.add('hidden');
+            result.classList.remove('hidden');
+
+            // Định dạng câu trả lời AI cho đẹp mắt
+            result.innerHTML = `
+                <div class="space-y-3">
+                    <p class="text-xs text-emerald-400 font-bold flex items-center gap-1">
+                        <i data-lucide="check-circle" class="w-4 h-4"></i> Phân tích Portfolio thành công
+                    </p>
+                    <div class="text-[11px] text-slate-300 leading-relaxed space-y-2 whitespace-pre-line">
+                        ${aiReply}
+                    </div>
+                </div>
+            `;
+            lucide.createIcons();
+
+        } catch (error) {
+            console.error(error);
+            loading.classList.add('hidden');
+            placeholder.classList.remove('hidden');
+            showToast('Không thể kích hoạt phân tích dữ liệu AI. Hãy kiểm tra API Key của bạn.', 'error');
+        }
+    }
+
+    function downloadCohortCSV() {
+        showToast('Đang tạo và tải tệp CSV danh mục khách hàng mẫu...', 'success');
+        // Mô phỏng tải file CSV
+        let csvContent = "data:text/csv;charset=utf-8,";
+        csvContent += "ID,Ten Khach Hang,Thu Nhap,DTI,Tre CIC,Cong Viec,Xac Suat Vo No,Khuyen Nghi\n";
+        state.mockCohort.forEach(item => {
+            csvContent += `${item.id},${item.name},${item.income},${item.dti}%,${item.late},${item.job},${item.risk}%,${item.status}\n`;
+        });
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "homecredit_risk_portfolio_data.csv");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+
+    // ==========================================
+    // TAB: AI RISK PREDICTOR
+    // ==========================================
+
+    // Hàm gọi AI đánh giá Rủi Ro Cá Nhân
+    async function runAiPrediction(event) {
+        event.preventDefault();
+
+        const income = parseFloat(document.getElementById('pred-income').value);
+        const expenses = parseFloat(document.getElementById('pred-expenses').value);
+        const latePaymentsCode = parseInt(document.getElementById('pred-late-payments').value);
+        const otherDebts = parseFloat(document.getElementById('pred-other-debts').value) || 0;
+        const loanAmount = parseFloat(document.getElementById('pred-loan-amount').value);
+        const loanTerm = parseInt(document.getElementById('pred-loan-term').value);
+        const job = document.getElementById('pred-job').value;
+        const dependents = parseInt(document.getElementById('pred-dependents').value) || 0;
+        const assets = document.getElementById('pred-assets').value;
+
+        // Show Loading Overlay
+        const overlay = document.getElementById('ai-loading-overlay');
+        overlay.classList.remove('hidden');
+
+        // Tính toán rủi ro toán học cục bộ (Rule-based backup) để làm mốc so sánh
+        const calculatedRisk = calculateLocalRisk(income, expenses, latePaymentsCode, otherDebts, loanAmount, loanTerm, dependents);
+
+        try {
+            // Chuẩn bị dữ liệu để truyền cho Gemini
+            const userFinancialProfile = `
+                - Thu nhập hàng tháng: ${income.toLocaleString('vi-VN')} VNĐ
+                - Chi tiêu hàng tháng: ${expenses.toLocaleString('vi-VN')} VNĐ
+                - Số lần trễ nợ quá khứ: ${latePaymentsCode} lần
+                - Các khoản nợ khác đang trả: ${otherDebts.toLocaleString('vi-VN')} VNĐ
+                - Khoản vay mới đang đăng ký: ${loanAmount.toLocaleString('vi-VN')} VNĐ trong ${loanTerm} tháng
+                - Nghề nghiệp: ${job}
+                - Người phụ thuộc: ${dependents}
+                - Tài sản sở hữu: ${assets}
+            `;
+
+            const prompt = `Hãy đóng vai trò là một chuyên gia thẩm định tài chính tín dụng cấp cao của Home Credit. Phân tích rủi ro nợ xấu/vỡ nợ đối với hồ sơ tài chính cá nhân sau đây:\n${userFinancialProfile}\n\nHãy chấm điểm và đưa ra nhận xét chi tiết định dạng JSON dưới cấu trúc sau:\n{\n  "risk_score_percent": <số từ 0 đến 100 đại diện cho xác suất vỡ nợ>,\n  "risk_level_text": "<Thấp/Trung bình/Cao/Cực kỳ nguy hiểm>",\n  "detailed_critique": "<Một nhận xét ngắn gọn khoảng 2-3 câu về hồ sơ này>",\n  "actionable_tips": [\n    {"tip": "<Lời khuyên thiết thực thứ nhất>", "impact": "<Cao/Vừa> "},\n    {"tip": "<Lời khuyên thiết thực thứ hai>", "impact": "<Cao/Vừa>"},\n    {"tip": "<Lời khuyên thiết thực thứ ba>", "impact": "<Cao/Vừa>"}\n  ]\n}`;
+
+            // Thực hiện API Call đến Gemini
+            const apiKeyToUse = state.apiKey;
+            const responseText = await callGeminiApi(prompt, apiKeyToUse);
+            
+            // Xử lý phản hồi JSON
+            const parsedData = extractAndParseJson(responseText, calculatedRisk);
+
+            // Cập nhật giao diện kết quả
+            updatePredictionUI(parsedData);
+
+        } catch (error) {
+            console.error('Lỗi thẩm định AI:', error);
+            showToast('Lỗi kết nối AI. Sử dụng thuật toán dự toán ngoại tuyến cục bộ.', 'warning');
+            
+            // Fallback sang kết quả cục bộ tính toán theo giải thuật nội bộ
+            const fallbackData = buildFallbackData(calculatedRisk);
+            updatePredictionUI(fallbackData);
+        } finally {
+            overlay.classList.add('hidden');
+            document.getElementById('ai-placeholder-view').classList.add('hidden');
+            document.getElementById('ai-result-view').classList.remove('hidden');
+            document.getElementById('ai-detailed-advice-panel').classList.remove('hidden');
+        }
+    }
+
+    // Hàm phân tích toán học tính toán rủi ro sơ bộ (Local Rule-based engine)
+    function calculateLocalRisk(income, expenses, latePaymentsCode, otherDebts, loanAmount, loanTerm, dependents) {
+        let riskScore = 15; // Mức nền rủi ro tối thiểu
+
+        const dti = (expenses + otherDebts + (loanAmount / loanTerm)) / income;
+        
+        // Ảnh hưởng DTI (Debt-to-Income)
+        if (dti > 0.8) riskScore += 35;
+        else if (dti > 0.6) riskScore += 25;
+        else if (dti > 0.4) riskScore += 15;
+        else riskScore += 5;
+
+        // Trễ hạn quá khứ (CIC)
+        if (latePaymentsCode === 1) riskScore += 15;
+        else if (latePaymentsCode === 3) riskScore += 35;
+        else if (latePaymentsCode === 6) riskScore += 60;
+
+        // Số người phụ thuộc
+        riskScore += dependents * 3;
+
+        // Giới hạn
+        return Math.min(Math.max(riskScore, 5), 98);
+    }
+
+    // Tạo bộ dữ liệu fallback khi API lỗi
+    function buildFallbackData(calculatedRisk) {
+        let level = "Thấp";
+        let critique = "Hồ sơ của bạn thể hiện thói quen tài chính rất lành mạnh, tỷ lệ nợ trên thu nhập cân đối.";
+        if (calculatedRisk > 70) {
+            level = "Cực kỳ Nguy hiểm";
+            critique = "Bạn đang chịu áp lực nợ rất nặng kết hợp với lịch sử quá hạn quá khứ. Cần tái cơ cấu gấp trước khi phát sinh nợ xấu nhóm 3.";
+        } else if (calculatedRisk > 45) {
+            level = "Cao";
+            critique = "Chỉ số nợ trên thu nhập vượt mức an toàn. Nguy cơ mất khả năng thanh toán khi gặp biến cố thu nhập đột ngột.";
+        } else if (calculatedRisk > 20) {
+            level = "Trung bình";
+            critique = "Dòng tiền hàng tháng tương đối cân đối nhưng cần lưu ý dự phòng ngân quỹ chặt chẽ hơn.";
+        }
+
+        return {
+            risk_score_percent: calculatedRisk,
+            risk_level_text: level,
+            detailed_critique: critique,
+            actionable_tips: [
+                { tip: "Thiết lập trích nợ tự động ngay sau ngày nhận lương 1 ngày để đảm bảo không quên hạn đóng tiền.", impact: "Cao" },
+                { tip: "Hạn chế mở thêm các khoản mua sắm trả góp giải trí không thiết yếu trong vòng 6 tháng tới.", impact: "Vừa" },
+                { tip: "Xây dựng một quỹ khẩn cấp tối thiểu trị giá 3 tháng chi tiêu thiết yếu.", impact: "Cao" }
+            ]
+        };
+    }
+
+    // Gọi API của Gemini
+    async function callGeminiApi(prompt, customApiKey = "") {
+        const apiKey = customApiKey || ""; 
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+
+        const payload = {
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: {
+                responseMimeType: "application/json"
+            }
+        };
+
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+            throw new Error(`Gemini API Error: ${response.statusText}`);
+        }
+
+        const result = await response.json();
+        return result.candidates?.[0]?.content?.parts?.[0]?.text || "";
+    }
+
+    // Rút trích và phân tích JSON trả về từ mô hình ngôn ngữ
+    function extractAndParseJson(rawText, defaultRiskBackup) {
+        try {
+            // Làm sạch markdown nếu có
+            let cleanText = rawText.trim();
+            if (cleanText.startsWith("```json")) {
+                cleanText = cleanText.substring(7);
+            }
+            if (cleanText.endsWith("```")) {
+                cleanText = cleanText.substring(0, cleanText.length - 3);
+            }
+            cleanText = cleanText.trim();
+            return JSON.parse(cleanText);
+        } catch (e) {
+            console.warn("Lỗi phân tích JSON từ AI, chuyển về fallback:", e);
+            return buildFallbackData(defaultRiskBackup);
+        }
+    }
+
+    // Cập nhật Giao diện đồ hóa sau khi thẩm định xong
+    function updatePredictionUI(data) {
+        const riskPercent = data.risk_score_percent || 10;
+        const level = data.risk_level_text || "Thấp";
+        const critique = data.detailed_critique || "Bình thường";
+        const tips = data.actionable_tips || [];
+
+        // Cập nhật Gauge vẽ bằng SVG (stroke-dasharray="251.2" đại diện cho chu vi r=40)
+        const gauge = document.getElementById('gauge-progress');
+        const circumference = 251.2;
+        const offset = circumference - (riskPercent / 100) * circumference;
+        gauge.setAttribute('stroke-dashoffset', offset);
+
+        // Đổi màu sắc gauge theo cấp độ rủi ro
+        if (riskPercent > 70) {
+            gauge.setAttribute('stroke', '#ee1d23'); // Đỏ
+            document.getElementById('result-risk-level').className = "text-xs font-semibold text-rose-500 mt-1";
+            document.getElementById('result-status-icon').className = "w-4 h-4 text-rose-500";
+        } else if (riskPercent > 40) {
+            gauge.setAttribute('stroke', '#f59e0b'); // Vàng
+            document.getElementById('result-risk-level').className = "text-xs font-semibold text-yellow-500 mt-1";
+            document.getElementById('result-status-icon').className = "w-4 h-4 text-yellow-500";
+        } else {
+            gauge.setAttribute('stroke', '#10b981'); // Xanh lá
+            document.getElementById('result-risk-level').className = "text-xs font-semibold text-emerald-400 mt-1";
+            document.getElementById('result-status-icon').className = "w-4 h-4 text-emerald-400";
+        }
+
+        // Cập nhật text hiển thị rủi ro
+        document.getElementById('result-risk-percentage').innerText = `${riskPercent}%`;
+        document.getElementById('result-risk-level').innerText = `Trạng thái: ${level}`;
+        document.getElementById('result-summary').innerText = critique;
+
+        // Cập nhật chi tiết Lời khuyên
+        const adviceList = document.getElementById('ai-advice-list');
+        adviceList.innerHTML = '';
+
+        tips.forEach(item => {
+            const tipEl = document.createElement('div');
+            tipEl.className = "p-3 bg-slate-900/60 rounded-xl border border-slate-800 flex items-start gap-3";
+            tipEl.innerHTML = `
+                <div class="p-1 rounded bg-hcRed-500/10 text-hcRed-500 shrink-0 mt-0.5">
+                    <i data-lucide="info" class="w-4 h-4"></i>
+                </div>
+                <div>
+                    <p class="text-xs text-white leading-relaxed font-semibold">${item.tip}</p>
+                    <span class="inline-block px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 text-[10px] font-bold mt-1.5">Ưu tiên tác động: ${item.impact}</span>
+                </div>
+            `;
+            adviceList.appendChild(tipEl);
+        });
+
+        lucide.createIcons();
+        showToast('Báo cáo phân tích rủi ro AI đã sẵn sàng!', 'success');
+    }
+
+
+    // ==========================================
+    // TAB: CALCULATOR
+    // ==========================================
+
+    function updateCalculator() {
+        const amount = parseFloat(document.getElementById('calc-amount-slider').value);
+        const term = parseInt(document.getElementById('calc-term-slider').value);
+        
+        state.calculator.amount = amount;
+        state.calculator.term = term;
+
+        document.getElementById('calc-amount-label').innerText = `${amount.toLocaleString('vi-VN')} đ`;
+        document.getElementById('calc-term-label').innerText = `${term} Tháng`;
+
+        calculateAndRenderSchedule();
+    }
+
+    function setInterestMethod(method) {
+        state.calculator.method = method;
+        
+        const btnRed = document.getElementById('method-reducing');
+        const btnFlat = document.getElementById('method-flat');
+
+        if (method === 'reducing') {
+            btnRed.className = "py-2.5 px-4 rounded-xl border text-xs font-semibold transition-all border-hcRed-500 bg-hcRed-500/10 text-white";
+            btnFlat.className = "py-2.5 px-4 rounded-xl border text-xs font-semibold transition-all border-slate-800 text-slate-400 hover:text-white";
+        } else {
+            btnFlat.className = "py-2.5 px-4 rounded-xl border text-xs font-semibold transition-all border-hcRed-500 bg-hcRed-500/10 text-white";
+            btnRed.className = "py-2.5 px-4 rounded-xl border text-xs font-semibold transition-all border-slate-800 text-slate-400 hover:text-white";
+        }
+
+        calculateAndRenderSchedule();
+    }
+
+    function calculateAndRenderSchedule() {
+        const amount = state.calculator.amount;
+        const term = state.calculator.term;
+        const rate = state.calculator.rate; // Lãi suất hàng tháng
+        const method = state.calculator.method;
+
+        const scheduleList = document.getElementById('calc-schedule-list');
+        scheduleList.innerHTML = '';
+
+        let totalPrincipalPaid = 0;
+        let remainingBalance = amount;
+        
+        let avgMonthlyPrincipal = amount / term;
+        let firstMonthInterest = amount * rate;
+        let avgMonthlyTotal = 0;
+
+        if (method === 'flat') {
+            // Lãi suất cố định (Flat)
+            avgMonthlyTotal = avgMonthlyPrincipal + firstMonthInterest;
+            document.getElementById('calc-monthly-principal').innerText = `${Math.round(avgMonthlyPrincipal).toLocaleString('vi-VN')} đ`;
+            document.getElementById('calc-monthly-interest').innerText = `${Math.round(firstMonthInterest).toLocaleString('vi-VN')} đ`;
+            document.getElementById('calc-monthly-total').innerText = `${Math.round(avgMonthlyTotal).toLocaleString('vi-VN')} đ`;
+
+            for (let i = 1; i <= term; i++) {
+                renderScheduleRow(i, avgMonthlyPrincipal, firstMonthInterest, avgMonthlyTotal, scheduleList);
+            }
+        } else {
+            // Dư nợ giảm dần (Reducing Balance)
+            let tempRemaining = amount;
+            let sumInterest = 0;
+
+            // Tính nhanh tháng thứ nhất để đưa lên bảng tóm tắt
+            let firstInterest = tempRemaining * rate;
+            let firstTotal = avgMonthlyPrincipal + firstInterest;
+
+            document.getElementById('calc-monthly-principal').innerText = `${Math.round(avgMonthlyPrincipal).toLocaleString('vi-VN')} đ`;
+            document.getElementById('calc-monthly-interest').innerText = `${Math.round(firstInterest).toLocaleString('vi-VN')} đ`;
+            document.getElementById('calc-monthly-total').innerText = `${Math.round(firstTotal).toLocaleString('vi-VN')} đ`;
+
+            for (let i = 1; i <= term; i++) {
+                let currentInterest = tempRemaining * rate;
+                let currentTotal = avgMonthlyPrincipal + currentInterest;
+                tempRemaining -= avgMonthlyPrincipal;
+
+                renderScheduleRow(i, avgMonthlyPrincipal, currentInterest, currentTotal, scheduleList);
+            }
+        }
+        lucide.createIcons();
+    }
+
+    function renderScheduleRow(month, principal, interest, total, container) {
+        const row = document.createElement('div');
+        row.className = "flex items-center justify-between p-3 bg-slate-900/40 rounded-xl border border-slate-800/60 text-xs";
+        row.innerHTML = `
+            <div class="flex items-center gap-2">
+                <span class="w-6 h-6 rounded-full bg-slate-800 text-slate-400 flex items-center justify-center font-bold text-[10px]">T${month}</span>
+                <div>
+                    <p class="font-semibold text-white">Gốc: ${Math.round(principal).toLocaleString('vi-VN')}đ</p>
+                    <p class="text-[10px] text-slate-500">Lãi giảm dần: ${Math.round(interest).toLocaleString('vi-VN')}đ</p>
+                </div>
+            </div>
+            <div class="text-right">
+                <p class="font-bold text-hcRed-400">${Math.round(total).toLocaleString('vi-VN')} đ</p>
+                <p class="text-[10px] text-slate-500 flex items-center gap-1"><i data-lucide="check" class="w-3 h-3 text-emerald-400"></i> Đúng lịch</p>
+            </div>
+        `;
+        container.appendChild(row);
+    }
+
+    function applyForCalculatedLoan() {
+        showToast(`Gửi đơn đăng ký khoản vay trị giá ${state.calculator.amount.toLocaleString('vi-VN')}đ thành công!`, 'success');
+    }
+
+
+    // ==========================================
+    // TAB: CREDIT CARD CREATOR
+    // ==========================================
+
+    function changeCardTheme(theme) {
+        const card = document.getElementById('credit-card-canvas');
+        state.cardDetails.theme = theme;
+
+        // Reset theme classes
+        card.className = "w-full max-w-[420px] aspect-[1.58/1] rounded-2xl p-6 flex flex-col justify-between text-white shadow-2xl relative transition-all duration-500";
+
+        if (theme === 'hc-red') {
+            card.classList.add('bg-gradient-to-br', 'from-hcRed-600', 'to-rose-950', 'border', 'border-hcRed-500/20', 'shadow-neon-red');
+            document.getElementById('card-type-label').innerText = "Platinum Visa";
+        } else if (theme === 'cyber-gold') {
+            card.classList.add('bg-gradient-to-br', 'from-yellow-600', 'via-amber-800', 'to-zinc-950', 'border', 'border-amber-500/20', 'shadow-neon-green');
+            document.getElementById('card-type-label').innerText = "Vàng Hoàng Kim (Gold Aura)";
+        } else {
+            card.classList.add('bg-gradient-to-br', 'from-slate-800', 'via-slate-900', 'to-zinc-950', 'border', 'border-slate-700/50', 'shadow-neon-red');
+            document.getElementById('card-type-label').innerText = "Carbon Stealth Black";
+        }
+        showToast('Đã áp dụng chủ đề thẻ mới!', 'info');
+    }
+
+    function updateCardDetails() {
+        const inputName = document.getElementById('card-holder-input').value.toUpperCase();
+        state.cardDetails.holder = inputName || "NGUYEN MINH QUAN";
+        document.getElementById('card-holder-label').innerText = state.cardDetails.holder;
+    }
+
+    function toggleCardLock() {
+        const switchBtn = document.getElementById('card-lock-switch');
+        const isLocked = switchBtn.checked;
+        state.cardDetails.locked = isLocked;
+
+        const lockOverlay = document.getElementById('card-lock-overlay');
+        const lockBg = document.getElementById('card-lock-bg');
+        const lockDot = document.getElementById('card-lock-dot');
+
+        if (isLocked) {
+            lockOverlay.classList.remove('hidden');
+            lockBg.classList.replace('bg-slate-700', 'bg-hcRed-500');
+            lockDot.classList.replace('left-0.5', 'left-5.5');
+            showToast('Đã tạm khóa thẻ thành công.', 'warning');
+        } else {
+            lockOverlay.classList.add('hidden');
+            lockBg.classList.replace('bg-hcRed-500', 'bg-slate-700');
+            lockDot.classList.replace('left-5.5', 'left-0.5');
+            showToast('Đã mở khóa thẻ hoạt động bình thường.', 'success');
+        }
+    }
+
+    function toggleCardCVV() {
+        state.cardDetails.cvvHidden = !state.cardDetails.cvvHidden;
+        const numLabel = document.getElementById('card-number-label');
+        const cvvLabel = document.getElementById('card-cvv-label');
+
+        if (state.cardDetails.cvvHidden) {
+            numLabel.innerText = "4892 **** **** 1290";
+            cvvLabel.innerText = "***";
+            showToast('Đã ẩn thông tin bảo mật thẻ.', 'info');
+        } else {
+            numLabel.innerText = "4892 1029 3810 1290";
+            cvvLabel.innerText = "552";
+            showToast('Đã hiển thị thông tin bảo mật thẻ.', 'warning');
+        }
+    }
+
+    function requestPhysicalCard() {
+        showToast('Yêu cầu phát hành thẻ cứng thành công!', 'success');
+    }
+
+
+    // ==========================================
+    // TAB: AI CHATBOT ASSISTANT
+    // ==========================================
+
+    async function sendChatMessage() {
+        const inputField = document.getElementById('chat-input-field');
+        const messageText = inputField.value.trim();
+        if (!messageText) return;
+
+        // Clear input
+        inputField.value = '';
+
+        // Add user message to UI
+        appendChatMessage('user', messageText);
+
+        // Add Bot typing simulator
+        const botMessageId = appendChatMessage('bot-loading', 'AI đang suy nghĩ...');
+
+        try {
+            // Chuẩn bị ngữ cảnh cho Chatbot
+            const historyPrompt = state.chatHistory.map(item => `${item.sender === 'user' ? 'Khách hàng' : 'Trợ lý'}: ${item.text}`).join('\n');
+            const fullSystemPrompt = `Bạn là Trợ lý tài chính AI thông minh của hãng Home Credit Việt Nam. Bạn có thái độ lịch thiệp, thông thái, chu đáo, đưa ra các lời khuyên tín dụng chính xác, tận tâm bằng tiếng Việt giúp khách hàng tối ưu hóa tài chính của họ và quản lý rủi ro nợ nần lành mạnh. Hãy trả lời câu hỏi mới của khách hàng dựa trên lịch sử hội thoại dưới đây:\n${historyPrompt}\nKhách hàng: ${messageText}\nTrợ lý:`;
+
+            const reply = await callGeminiApi(fullSystemPrompt, state.apiKey);
+            
+            // Xóa loading và thay bằng tin nhắn thực tế
+            removeChatMessage(botMessageId);
+            appendChatMessage('bot', reply);
+
+            // Lưu lịch sử
+            state.chatHistory.push({ sender: 'user', text: messageText });
+            state.chatHistory.push({ sender: 'bot', text: reply });
+
+        } catch (error) {
+            console.error('Lỗi kết nối Trợ lý AI:', error);
+            removeChatMessage(botMessageId);
+            appendChatMessage('bot', 'Xin lỗi anh Quân, kết nối mạng của tôi đang gián đoạn một chút. Tôi khuyên anh nên duy trì thói quen trả nợ đúng ngày để giữ điểm tín dụng tốt.');
+        }
+    }
+
+    function handleChatSubmit(event) {
+        if (event.key === 'Enter') {
+            sendChatMessage();
+        }
+    }
+
+    function appendChatMessage(sender, text) {
+        const container = document.getElementById('chat-messages-container');
+        const msgDiv = document.createElement('div');
+        const uniqueId = `msg-${Date.now()}`;
+        msgDiv.id = uniqueId;
+
+        if (sender === 'user') {
+            msgDiv.className = "flex items-start gap-3 justify-end";
+            msgDiv.innerHTML = `
+                <div class="p-4 bg-hcRed-500 text-white rounded-2xl max-w-[80%] text-xs font-medium">
+                    ${text}
+                </div>
+                <div class="w-8 h-8 rounded-full bg-slate-800 text-white flex items-center justify-center shrink-0">
+                     Quân
+                </div>
+            `;
+        } else if (sender === 'bot-loading') {
+            msgDiv.className = "flex items-start gap-3";
+            msgDiv.innerHTML = `
+                <div class="w-8 h-8 rounded-full bg-hcRed-500/10 text-hcRed-500 flex items-center justify-center shrink-0">
+                    <i data-lucide="bot" class="w-4 h-4"></i>
+                </div>
+                <div class="p-4 bg-slate-900 rounded-2xl max-w-[80%] border border-slate-800 flex items-center gap-2">
+                    <div class="w-2.5 h-2.5 bg-hcRed-500 rounded-full animate-bounce"></div>
+                    <div class="w-2.5 h-2.5 bg-hcRed-500 rounded-full animate-bounce [animation-delay:0.2s]"></div>
+                    <div class="w-2.5 h-2.5 bg-hcRed-500 rounded-full animate-bounce [animation-delay:0.4s]"></div>
+                </div>
+            `;
+        } else {
+            msgDiv.className = "flex items-start gap-3";
+            msgDiv.innerHTML = `
+                <div class="w-8 h-8 rounded-full bg-hcRed-500/10 text-hcRed-500 flex items-center justify-center shrink-0">
+                    <i data-lucide="bot" class="w-4 h-4"></i>
+                </div>
+                <div class="p-4 bg-slate-900 rounded-2xl max-w-[80%] border border-slate-800 text-xs leading-relaxed text-slate-300 font-medium">
+                    ${text.replace(/\n/g, '<br>')}
+                </div>
+            `;
+        }
+
+        container.appendChild(msgDiv);
+        container.scrollTop = container.scrollHeight;
+        lucide.createIcons();
+
+        return uniqueId;
+    }
+
+    function removeChatMessage(id) {
+        const msg = document.getElementById(id);
+        if (msg) msg.remove();
+    }
+
+    function clearChat() {
+        const container = document.getElementById('chat-messages-container');
+        container.innerHTML = `
+            <div class="flex items-start gap-3">
+                <div class="w-8 h-8 rounded-full bg-hcRed-500/10 text-hcRed-500 flex items-center justify-center shrink-0">
+                    <i data-lucide="bot" class="w-4 h-4"></i>
+                </div>
+                <div class="p-4 bg-slate-900 rounded-2xl max-w-[80%] border border-slate-800">
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        Lịch sử trò chuyện đã được xóa. Tôi là Trợ lý cố vấn tín dụng thông minh, tôi có thể giúp gì cho anh Quân lúc này?
+                    </p>
+                </div>
+            </div>
+        `;
+        state.chatHistory = [];
+        lucide.createIcons();
+        showToast('Đã xóa sạch lịch sử trò chuyện.', 'info');
+    }
+</script>
 </body>
 </html>
